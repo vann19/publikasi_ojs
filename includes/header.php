@@ -28,7 +28,7 @@
       <div class="flex items-center justify-between h-20">
 
         <a href="/" class="flex items-center">
-          <img src="assets/img/logo.png" alt="Nawa Edukasi" class="h-10 w-auto object-contain">
+          <img src="/assets/img/logo.png" alt="Nawa Edukasi" class="h-10 w-auto object-contain">
         </a>
 
         <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-gray-600">
@@ -36,7 +36,7 @@
           <?php $navLink('tentang-kami', 'Tentang Kami', '/tentang-kami.php'); ?>
 
           <div class="relative group">
-            <button class="flex items-center gap-1 hover:text-primary-700 transition-colors">
+            <button class="flex items-center gap-1 hover:text-primary-700 transition-colors <?php echo $activePage === 'buku' ? 'text-primary-700 font-semibold' : ''; ?>">
               Buku
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -51,25 +51,9 @@
           </div>
 
           <?php $navLink('jurnal', 'Jurnal (OJS)', '/jurnal.php'); ?>
-          <?php $navLink('seminar', 'Seminar', '/seminar'); ?>
-
-          <div class="relative group">
-            <button class="flex items-center gap-1 hover:text-primary-700 transition-colors">
-              Layanan
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div class="absolute left-0 top-full pt-3 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-              <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2">
-                <a href="/layanan/penerbitan-buku" class="block px-4 py-2 hover:bg-primary-50 hover:text-primary-700">Penerbitan Buku</a>
-                <a href="/layanan/hki" class="block px-4 py-2 hover:bg-primary-50 hover:text-primary-700">Layanan HKI</a>
-                <a href="/layanan/pendampingan-jurnal" class="block px-4 py-2 hover:bg-primary-50 hover:text-primary-700">Pendampingan Jurnal</a>
-              </div>
-            </div>
-          </div>
-
-          <?php $navLink('kontak', 'Kontak', '/kontak'); ?>
+          <?php $navLink('seminar', 'Seminar', '/seminar.php'); ?>
+          <?php $navLink('layanan', 'Layanan', '/layanan.php'); ?>
+          <?php $navLink('kontak', 'Kontak', '/kontak.php'); ?>
         </nav>
 
         <a href="https://wa.me/6281916200962" target="_blank" rel="noopener"
@@ -90,9 +74,9 @@
       <?php $navLink('tentang-kami', 'Tentang Kami', '/tentang-kami.php'); ?>
       <?php $navLink('buku', 'Buku', '/buku/'); ?>
       <?php $navLink('jurnal', 'Jurnal (OJS)', '/jurnal.php'); ?>
-      <?php $navLink('seminar', 'Seminar', '/seminar'); ?>
-      <?php $navLink('hki', 'Layanan HKI', '/layanan/hki'); ?>
-      <?php $navLink('kontak', 'Kontak', '/kontak'); ?>
+      <?php $navLink('seminar', 'Seminar', '/seminar.php'); ?>
+      <?php $navLink('layanan', 'Layanan', '/layanan.php'); ?>
+      <?php $navLink('kontak', 'Kontak', '/kontak.php'); ?>
       <a href="https://wa.me/6281916200962" class="block px-4 py-2 rounded-lg bg-primary-600 text-white text-center font-semibold">Hubungi Kami</a>
     </nav>
   </header>

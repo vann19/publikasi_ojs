@@ -2,6 +2,7 @@
 $activePage = 'buku';
 include '../includes/header.php';
 
+
 // Data dummy kategori & buku — nanti diganti query database
 $kategoriList = [
   ['nama' => 'Semua Kategori', 'jumlah' => 86, 'aktif' => true],
