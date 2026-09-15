@@ -4,24 +4,25 @@ module.exports = {
     "./*.php",
     "./pages/**/*.php",
     "./includes/**/*.php",
+    "./buku/**/*.php",
+    "./layanan/**/*.php",
     "./assets/js/**/*.js",
   ],
   theme: {
     extend: {
       colors: {
         primary: {
-          50:  '#eff6ff',
-          100: '#dbeafe',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          900: '#1e3a8a',
+          50:  '#F5F3FF',
+          100: '#EDE9FE',
+          200: '#DDD6FE',
+          500: '#7C3AED',
+          600: '#6D28D9',
+          700: '#5B21B6',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
       },
     },
   },
-  plugins: [],
 }
