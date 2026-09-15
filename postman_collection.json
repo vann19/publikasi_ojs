@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "b9c3f3a8-4c2d-4b8a-9a9c-0d8f8d5e1f1c",
+		"name": "OJS Publikasi API",
+		"description": "Koleksi endpoint untuk menguji API penambahan buku dan jurnal beserta upload gambar.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Login Admin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "fansya",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Fansya123!",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/login.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login.php"
+					]
+				},
+				"description": "Gunakan endpoint ini pertama kali agar Postman menyimpan Session Cookie secara otomatis, sehingga endpoint lain (Buku/Jurnal) dapat diakses."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Tambah Buku (dengan Gambar)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Buku Panduan Sukses",
+							"type": "text"
+						},
+						{
+							"key": "author",
+							"value": "Fansya",
+							"type": "text"
+						},
+						{
+							"key": "publisher",
+							"value": "PT Nawa Edukasi",
+							"type": "text"
+						},
+						{
+							"key": "published_year",
+							"value": "2023",
+							"type": "text"
+						},
+						{
+							"key": "isbn",
+							"value": "978-602-1234-56-7",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Ini adalah deskripsi buku contoh.",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": [],
+							"description": "Pilih file gambar (JPG/PNG/WebP/GIF) maksimal 2MB."
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/add-book.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"add-book.php"
+					]
+				},
+				"description": "Endpoint untuk menambahkan buku. Pastikan Anda sudah menjalankan endpoint Login terlebih dahulu."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Tambah Jurnal (dengan Gambar)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Jurnal Ilmiah Teknologi",
+							"type": "text"
+						},
+						{
+							"key": "issn",
+							"value": "1234-5678",
+							"type": "text"
+						},
+						{
+							"key": "volume",
+							"value": "Vol 1",
+							"type": "text"
+						},
+						{
+							"key": "issue",
+							"value": "No 2",
+							"type": "text"
+						},
+						{
+							"key": "published_date",
+							"value": "2023-10-15",
+							"type": "text"
+						},
+						{
+							"key": "link",
+							"value": "https://example.com/jurnal",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": [],
+							"description": "Pilih file gambar (JPG/PNG/WebP/GIF) maksimal 2MB."
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/add-jurnal.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"add-jurnal.php"
+					]
+				},
+				"description": "Endpoint untuk menambahkan jurnal. Pastikan Anda sudah menjalankan endpoint Login terlebih dahulu."
+			},
+			"response": []
+		}
+	]
+}

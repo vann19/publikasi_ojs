@@ -6,6 +6,8 @@ module.exports = {
     "./includes/**/*.php",
     "./buku/**/*.php",
     "./layanan/**/*.php",
+    "./admin/**/*.php",
+    "./api/**/*.php",
     "./assets/js/**/*.js",
   ],
   theme: {

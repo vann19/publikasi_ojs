@@ -22,6 +22,7 @@
     };
   ?>
 
+  <?php if (!isset($hideNavbar) || !$hideNavbar): ?>
   <!-- Navbar -->
   <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -80,5 +81,7 @@
       <a href="https://wa.me/6281916200962" class="block px-4 py-2 rounded-lg bg-primary-600 text-white text-center font-semibold">Hubungi Kami</a>
     </nav>
   </header>
+  <?php endif; ?>
+
 
   <main>
