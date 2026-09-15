@@ -2,7 +2,6 @@
 $activePage = 'buku';
 include '../includes/header.php';
 
-
 // Data dummy kategori & buku — nanti diganti query database
 $kategoriList = [
   ['nama' => 'Semua Kategori', 'jumlah' => 86, 'aktif' => true],
@@ -31,25 +30,30 @@ $jumlahDitampilkan = count($bukuList);
 ?>
 
   <!-- Hero Banner -->
-  <section class="bg-primary-50 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid lg:grid-cols-2 gap-10 items-center">
-      <div>
-        <span class="inline-block text-xs font-semibold text-primary-700 bg-white rounded-full px-3 py-1 mb-4">Katalog Buku</span>
-        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight">
-          Temukan Buku Berkualitas untuk <span class="text-primary-700">Ilmu dan Inspirasi</span>
+   <section class="relative overflow-hidden">
+    <!-- Gambar latar -->
+    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/assets/img/buku.png');"></div>
+    <!-- Gradien overlay biar teks tetap kebaca -->
+    <div class="absolute inset-0 bg-gradient-to-r from-[#1E1B3A]/95 via-[#1E1B3A]/80 to-[#1E1B3A]/30"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="max-w-xl">
+        <span class="inline-block text-xs font-semibold text-white bg-white/10 border border-white/30 rounded-full px-3 py-1 mb-4">
+          Katalog Buku
+        </span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+          Temukan Buku Berkualitas untuk <span class="text-primary-300">Ilmu dan Inspirasi</span>
         </h1>
-        <p class="text-gray-500 mt-4 max-w-md">
+        <p class="text-gray-200 mt-4 max-w-md">
           Berbagai buku terbitan Nawa Edukasi yang membahas pendidikan, teknologi, metodologi penelitian, dan banyak topik lainnya.
         </p>
-        <p class="text-sm text-gray-500 mt-6">
-          <a href="/" class="hover:text-primary-700">Beranda</a> / <span class="text-primary-700 font-medium">Buku</span>
+        <p class="text-sm text-gray-300 mt-6">
+          <a href="/" class="hover:text-white transition-colors">Beranda</a> / <span class="text-primary-300 font-medium">Buku</span>
         </p>
       </div>
-<div class="hidden lg:flex justify-center items-center"> 
-  <img src="/assets/img/buku.png" alt="Tumpukan buku terbitan Nawa Edukasi" class="w-4/5 max-w-lg h-auto object-contain drop-shadow-md"> 
-</div>
     </div>
   </section>
+
 
   <!-- Konten: sidebar + grid -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid lg:grid-cols-4 gap-8">

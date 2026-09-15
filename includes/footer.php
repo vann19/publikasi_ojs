@@ -8,7 +8,7 @@
         <!-- Brand -->
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center gap-2 mb-4">
-            <img src="assets/img/logo.png" alt="Nawa Edukasi" class="h-10 w-auto object-contain brightness-0 invert">
+            <img src="/assets/img/logo.png" alt="Nawa Edukasi" class="h-10 w-auto object-contain brightness-0 invert">
           </div>
           <p class="text-sm text-gray-400 leading-relaxed max-w-sm">
             Perusahaan yang bergerak di bidang penerbitan buku, layanan Hak Kekayaan Intelektual (HKI),
@@ -16,13 +16,13 @@
             budaya riset di Indonesia.
           </p>
           <div class="flex items-center gap-3 mt-5">
-            <a href="#" aria-label="Facebook" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary-600 transition-colors">
+            <a href="https://web.facebook.com/profile.php?id=61579853584324" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary-600 transition-colors">
               <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>
             </a>
-            <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary-600 transition-colors">
+            <a href="https://www.instagram.com/nawa.edukasi/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary-600 transition-colors">
               <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 2.3.3 3.1 1.1.8.8 1 1.9 1.1 3.1.06 1.3.07 1.7.07 4.9s0 3.6-.07 4.9c-.06 1.2-.3 2.3-1.1 3.1-.8.8-1.9 1-3.1 1.1-1.3.06-1.7.07-4.9.07s-3.6 0-4.9-.07c-1.2-.06-2.3-.3-3.1-1.1-.8-.8-1-1.9-1.1-3.1C2.8 15.6 2.8 15.2 2.8 12s0-3.6.07-4.9c.06-1.2.3-2.3 1.1-3.1.8-.8 1.9-1 3.1-1.1C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.07-1 .05-1.6.2-1.9.35a2 2 0 00-.8.8c-.15.3-.3.9-.35 1.9C4.2 8.5 4.2 8.9 4.2 12s0 3.5.07 4.7c.05 1 .2 1.6.35 1.9.15.3.35.6.8.8.3.15.9.3 1.9.35 1.2.07 1.6.07 4.7.07s3.5 0 4.7-.07c1-.05 1.6-.2 1.9-.35.4-.2.6-.4.8-.8.15-.3.3-.9.35-1.9.07-1.2.07-1.6.07-4.7s0-3.5-.07-4.7c-.05-1-.2-1.6-.35-1.9a2 2 0 00-.8-.8c-.3-.15-.9-.3-1.9-.35C15.5 4 15.1 4 12 4zm0 3.4a4.6 4.6 0 110 9.2 4.6 4.6 0 010-9.2zm0 1.8a2.8 2.8 0 100 5.6 2.8 2.8 0 000-5.6zm4.8-2a1.1 1.1 0 110 2.2 1.1 1.1 0 010-2.2z"/></svg>
             </a>
-            <a href="#" aria-label="TikTok" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary-600 transition-colors">
+            <a href="https://www.tiktok.com/@nawa_edukasi_nusantara" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary-600 transition-colors">
               <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M16.6 5.8a4.6 4.6 0 01-3.3-1.4V15a5 5 0 11-4.3-4.9v2.1a2.9 2.9 0 102.4 2.9V2h2.2a4.6 4.6 0 002.8 4.1z"/></svg>
             </a>
           </div>
@@ -71,9 +71,29 @@
   </footer>
 
   <script>
-    document.getElementById('mobileMenuBtn').addEventListener('click', function () {
-      document.getElementById('mobileMenu').classList.toggle('hidden');
+    // Toggle mobile menu + ganti icon hamburger/close
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const iconHamburger = document.getElementById('iconHamburger');
+    const iconClose = document.getElementById('iconClose');
+
+    mobileMenuBtn.addEventListener('click', function () {
+      const isHidden = mobileMenu.classList.toggle('hidden');
+      iconHamburger.classList.toggle('hidden', !isHidden);
+      iconClose.classList.toggle('hidden', isHidden);
     });
+
+    // Dropdown Buku di mobile
+    const mobileBukuBtn = document.getElementById('mobileBukuBtn');
+    const mobileBukuMenu = document.getElementById('mobileBukuMenu');
+    const mobileBukuArrow = document.getElementById('mobileBukuArrow');
+
+    if (mobileBukuBtn) {
+      mobileBukuBtn.addEventListener('click', function () {
+        mobileBukuMenu.classList.toggle('hidden');
+        mobileBukuArrow.classList.toggle('rotate-180');
+      });
+    }
   </script>
 </body>
 </html>

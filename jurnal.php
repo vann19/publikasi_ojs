@@ -19,26 +19,30 @@ $jumlahDitampilkan = count($jurnalList);
 ?>
 
   <!-- Hero -->
-  <section class="bg-primary-50 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid lg:grid-cols-2 gap-10 items-center">
+ <section class="relative overflow-hidden">
+    <!-- Gambar latar -->
+    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/assets/img/laptop.png');"></div>
+    <!-- Gradien overlay biar teks tetap kebaca -->
+    <div class="absolute inset-0 bg-gradient-to-r from-[#1E1B3A]/95 via-[#1E1B3A]/80 to-[#1E1B3A]/30"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid lg:grid-cols-2 gap-10 items-center">
       <div>
-        <span class="inline-block text-xs font-semibold text-primary-700 bg-white rounded-full px-3 py-1 mb-4">Jurnal Ilmiah (OJS)</span>
-        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight">
-          Akses Jurnal Ilmiah <span class="text-primary-700">Terpercaya dan Terakreditasi</span>
+        <span class="inline-block text-xs font-semibold text-white bg-white/10 border border-white/30 rounded-full px-3 py-1 mb-4">Jurnal Ilmiah (OJS)</span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+          Akses Jurnal Ilmiah <span class="text-primary-300">Terpercaya dan Terakreditasi</span>
         </h1>
-        <p class="text-gray-500 mt-4 max-w-md">
+        <p class="text-gray-200 mt-4 max-w-md">
           Temukan dan baca berbagai jurnal ilmiah dari Nawa Edukasi yang terbit secara berkala melalui sistem Open Journal Systems (OJS).
         </p>
         <a href="#tentang-ojs" class="inline-flex items-center gap-2 mt-8 px-6 py-3 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors">
           Tentang OJS
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
         </a>
-        <p class="text-sm text-gray-500 mt-8">
-          <a href="/" class="hover:text-primary-700">Beranda</a> / <span class="text-primary-700 font-medium">Jurnal (OJS)</span>
+        <p class="text-sm text-gray-300 mt-8">
+          <a href="/" class="hover:text-white transition-colors">Beranda</a> / <span class="text-primary-300 font-medium">Jurnal (OJS)</span>
         </p>
       </div>
       <div class="hidden lg:flex justify-center">
-        <img src="/assets/img/laptop.png" alt="Tampilan jurnal Nawa Edukasi di sistem OJS" class="w-full max-w-lg h-auto object-contain">
       </div>
     </div>
   </section>
@@ -152,7 +156,6 @@ $jumlahDitampilkan = count($jurnalList);
   <section id="tentang-ojs" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
     <div class="rounded-2xl bg-primary-50 p-8 lg:p-10 grid lg:grid-cols-3 gap-8 items-center">
       <div class="hidden lg:block">
-        <img src="/assets/img/laptop.png" alt="Ilustrasi sistem OJS" class="w-full h-auto object-contain">
       </div>
       <div class="lg:col-span-2 grid sm:grid-cols-2 gap-8">
         <div>

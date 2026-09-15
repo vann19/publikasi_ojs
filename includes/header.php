@@ -20,6 +20,13 @@
         : 'hover:text-primary-700 transition-colors';
       echo '<a href="' . $href . '" class="' . $class . '">' . $label . '</a>';
     };
+    $navLinkMobile = function ($page, $label, $href) use ($activePage) {
+      $active = $activePage === $page;
+      $class = $active
+        ? 'block w-full py-3 px-2 text-primary-700 font-semibold border-b border-gray-100'
+        : 'block w-full py-3 px-2 hover:text-primary-700 transition-colors border-b border-gray-100';
+      echo '<a href="' . $href . '" class="' . $class . '">' . $label . '</a>';
+    };
   ?>
 
   <?php if (!isset($hideNavbar) || !$hideNavbar): ?>
@@ -62,23 +69,46 @@
           Hubungi Kami
         </a>
 
-        <button id="mobileMenuBtn" class="lg:hidden text-gray-700" aria-label="Buka menu">
-          <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <button id="mobileMenuBtn" class="lg:hidden text-gray-700 p-1" aria-label="Buka menu">
+          <!-- Hamburger icon -->
+          <svg id="iconHamburger" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <!-- Close icon -->
+          <svg id="iconClose" class="w-7 h-7 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
     </div>
 
-    <nav id="mobileMenu" class="hidden lg:hidden border-t border-gray-100 px-4 py-4 space-y-3 text-sm font-medium text-gray-600">
-      <?php $navLink('beranda', 'Beranda', '/'); ?>
-      <?php $navLink('tentang-kami', 'Tentang Kami', '/tentang-kami.php'); ?>
-      <?php $navLink('buku', 'Buku', '/buku/'); ?>
-      <?php $navLink('jurnal', 'Jurnal (OJS)', '/jurnal.php'); ?>
-      <?php $navLink('seminar', 'Seminar', '/seminar.php'); ?>
-      <?php $navLink('layanan', 'Layanan', '/layanan.php'); ?>
-      <?php $navLink('kontak', 'Kontak', '/kontak.php'); ?>
-      <a href="https://wa.me/6281916200962" class="block px-4 py-2 rounded-lg bg-primary-600 text-white text-center font-semibold">Hubungi Kami</a>
+    <nav id="mobileMenu" class="hidden lg:hidden border-t border-gray-100 text-sm font-medium text-gray-600 bg-white shadow-md">
+      <?php $navLinkMobile('beranda', 'Beranda', '/'); ?>
+      <?php $navLinkMobile('tentang-kami', 'Tentang Kami', '/tentang-kami.php'); ?>
+
+      <!-- Dropdown Buku di mobile -->
+      <div class="border-b border-gray-100">
+        <button id="mobileBukuBtn" class="w-full flex items-center justify-between py-3 px-2 <?php echo $activePage === 'buku' ? 'text-primary-700 font-semibold' : 'hover:text-primary-700'; ?> transition-colors">
+          Buku
+          <svg id="mobileBukuArrow" class="w-4 h-4 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div id="mobileBukuMenu" class="hidden bg-gray-50">
+          <a href="/buku/" class="block py-3 px-6 hover:text-primary-700 transition-colors border-b border-gray-100">Katalog Buku</a>
+          <a href="/ajukan-naskah" class="block py-3 px-6 hover:text-primary-700 transition-colors border-b border-gray-100">Ajukan Naskah</a>
+        </div>
+      </div>
+
+      <?php $navLinkMobile('jurnal', 'Jurnal (OJS)', '/jurnal.php'); ?>
+      <?php $navLinkMobile('seminar', 'Seminar', '/seminar.php'); ?>
+      <?php $navLinkMobile('layanan', 'Layanan', '/layanan.php'); ?>
+      <?php $navLinkMobile('kontak', 'Kontak', '/kontak.php'); ?>
+      <div class="p-4">
+        <a href="https://wa.me/6281916200962" target="_blank" rel="noopener" class="flex items-center justify-center w-full px-4 py-3 rounded-lg bg-primary-600 text-white text-center font-semibold hover:bg-primary-700 transition-colors">
+          Hubungi Kami
+        </a>
+      </div>
     </nav>
   </header>
   <?php endif; ?>
