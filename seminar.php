@@ -1,18 +1,10 @@
 <?php
 $activePage = 'seminar';
 include 'includes/header.php';
+require_once 'includes/db.php';
 
-// Data dummy seminar — field-field ini nanti dipetakan ke tabel "seminar" di database
-// (kolom umum: id, judul, tanggal, waktu, lokasi_tipe, lokasi_detail, kategori, status, kuota, harga)
-$seminarList = [
-  ['judul' => 'Strategi Menembus Jurnal Terindeks SINTA', 'tanggal' => '25 Sep 2026', 'waktu' => '09.00 - 12.00 WIB', 'lokasi_tipe' => 'Online', 'kategori' => 'Publikasi Ilmiah', 'status' => 'Akan Datang', 'harga' => 'Gratis', 'warna' => 'bg-emerald-700'],
-  ['judul' => 'Pelatihan Penulisan Buku Ajar bagi Dosen', 'tanggal' => '02 Okt 2026', 'waktu' => '13.00 - 16.00 WIB', 'lokasi_tipe' => 'Offline', 'kategori' => 'Penerbitan Buku', 'status' => 'Akan Datang', 'harga' => 'Rp150.000', 'warna' => 'bg-sky-800'],
-  ['judul' => 'Workshop Pendaftaran Hak Cipta dan Paten', 'tanggal' => '10 Okt 2026', 'waktu' => '09.00 - 11.30 WIB', 'lokasi_tipe' => 'Online', 'kategori' => 'HKI', 'status' => 'Akan Datang', 'harga' => 'Gratis', 'warna' => 'bg-purple-700'],
-  ['judul' => 'Seminar Nasional Inovasi Pendidikan 2026', 'tanggal' => '18 Okt 2026', 'waktu' => '08.00 - 15.00 WIB', 'lokasi_tipe' => 'Offline', 'kategori' => 'Pendidikan', 'status' => 'Akan Datang', 'harga' => 'Rp100.000', 'warna' => 'bg-teal-700'],
-  ['judul' => 'Metode Penelitian Kuantitatif untuk Pemula', 'tanggal' => '20 Agu 2026', 'waktu' => '09.00 - 12.00 WIB', 'lokasi_tipe' => 'Online', 'kategori' => 'Metodologi Penelitian', 'status' => 'Selesai', 'harga' => 'Gratis', 'warna' => 'bg-orange-600'],
-  ['judul' => 'Optimalisasi Naskah untuk Penerbit', 'tanggal' => '05 Agu 2026', 'waktu' => '13.00 - 15.00 WIB', 'lokasi_tipe' => 'Online', 'kategori' => 'Penerbitan Buku', 'status' => 'Selesai', 'harga' => 'Gratis', 'warna' => 'bg-rose-800'],
-];
-
+$pdo = getDB();
+$seminarList = $pdo->query("SELECT * FROM seminars WHERE is_active = 1 ORDER BY date ASC, created_at DESC")->fetchAll();
 $totalSeminar = count($seminarList);
 ?>
 
@@ -65,39 +57,72 @@ $totalSeminar = count($seminarList);
 
     <!-- Grid seminar -->
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <?php if (empty($seminarList)): ?>
+        <p class="text-sm text-gray-500 col-span-full py-8 text-center">Belum ada seminar yang dijadwalkan.</p>
+      <?php else: ?>
       <?php foreach ($seminarList as $s): ?>
+        <?php
+          $isUpcoming = $s['date'] && strtotime($s['date']) >= strtotime('today');
+          $statusLabel = $isUpcoming ? 'Akan Datang' : 'Selesai';
+          $tanggalFormatted = $s['date'] ? date('d M Y', strtotime($s['date'])) : '-';
+        ?>
         <div class="rounded-xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow flex flex-col">
-          <div class="h-32 <?php echo $s['warna']; ?> flex items-center justify-center relative">
-            <svg class="w-10 h-10 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.09 9.09 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.94 11.94 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
-            <span class="absolute top-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-full <?php echo $s['status'] === 'Akan Datang' ? 'bg-white text-emerald-700' : 'bg-white/80 text-gray-500'; ?>">
-              <?php echo $s['status']; ?>
+          <!-- Cover / Poster -->
+          <div class="h-40 bg-[#1E1B3A] flex items-center justify-center relative overflow-hidden">
+            <?php if ($s['image']): ?>
+              <img src="<?php echo htmlspecialchars($s['image']); ?>" alt="<?php echo htmlspecialchars($s['title']); ?>" class="w-full h-full object-cover">
+            <?php else: ?>
+              <svg class="w-10 h-10 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.09 9.09 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.94 11.94 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
+            <?php endif; ?>
+            <span class="absolute top-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-full <?php echo $isUpcoming ? 'bg-white text-emerald-700' : 'bg-white/80 text-gray-500'; ?>">
+              <?php echo $statusLabel; ?>
             </span>
           </div>
+
           <div class="p-5 flex flex-col flex-1">
-            <span class="text-xs font-semibold text-primary-700 bg-primary-50 rounded-full px-2.5 py-1 w-fit mb-3"><?php echo htmlspecialchars($s['kategori']); ?></span>
-            <h3 class="font-semibold text-gray-900 mb-2 leading-snug"><?php echo htmlspecialchars($s['judul']); ?></h3>
+            <h3 class="font-semibold text-gray-900 mb-3 leading-snug"><?php echo htmlspecialchars($s['title']); ?></h3>
+
+            <?php if ($s['description']): ?>
+              <p class="text-xs text-gray-500 mb-3 line-clamp-2"><?php echo htmlspecialchars($s['description']); ?></p>
+            <?php endif; ?>
 
             <div class="text-xs text-gray-500 space-y-1.5 mb-4">
+              <?php if ($s['date']): ?>
               <p class="flex items-center gap-2">
                 <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
-                <?php echo $s['tanggal']; ?> &bull; <?php echo $s['waktu']; ?>
+                <?php echo $tanggalFormatted; ?>
               </p>
+              <?php endif; ?>
+              <?php if ($s['location']): ?>
               <p class="flex items-center gap-2">
                 <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.5-7.5 11.25-7.5 11.25S4.5 18 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-                <?php echo $s['lokasi_tipe']; ?>
+                <?php echo htmlspecialchars($s['location']); ?>
               </p>
+              <?php endif; ?>
             </div>
 
             <div class="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
-              <span class="text-sm font-semibold text-gray-900"><?php echo $s['harga']; ?></span>
-              <a href="seminar-detail.php"
-                 class="text-sm font-semibold <?php echo $s['status'] === 'Akan Datang' ? 'text-white bg-primary-600 hover:bg-primary-700 px-4 py-2 rounded-lg transition-colors' : 'text-primary-700 hover:text-primary-800'; ?>">
-                <?php echo $s['status'] === 'Akan Datang' ? 'Daftar Sekarang' : 'Lihat Detail'; ?>
-              </a>
+              <span class="text-sm font-semibold <?php echo $s['price'] ? 'text-gray-900' : 'text-emerald-600'; ?>">
+                <?php echo $s['price'] ? 'Rp' . number_format($s['price'], 0, ',', '.') : 'Gratis'; ?>
+              </span>
+              <?php if ($s['link'] && $isUpcoming): ?>
+                <a href="<?php echo htmlspecialchars($s['link']); ?>" target="_blank" rel="noopener"
+                   class="text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 px-4 py-2 rounded-lg transition-colors">
+                  Daftar Sekarang
+                </a>
+              <?php elseif ($s['link']): ?>
+                <a href="<?php echo htmlspecialchars($s['link']); ?>" target="_blank" rel="noopener"
+                   class="text-sm font-semibold text-primary-700 hover:text-primary-800">
+                  Lihat Detail
+                </a>
+              <?php else: ?>
+                <span class="text-xs text-gray-400"><?php echo $isUpcoming ? 'Segera dibuka' : '—'; ?></span>
+              <?php endif; ?>
             </div>
           </div>
         </div>
       <?php endforeach; ?>
+      <?php endif; ?>
     </div>
 
     <!-- Pagination -->

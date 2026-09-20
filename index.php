@@ -4,16 +4,21 @@ include 'includes/header.php';
 require_once 'includes/db.php';
 $pdo = getDB();
 $latestBooks = $pdo->query("SELECT * FROM books ORDER BY created_at DESC LIMIT 6")->fetchAll();
+// Ambil data komentar dengan pagination (6 per halaman)
+$limit = 6;
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$offset = ($page - 1) * $limit;
+$totalComments = $pdo->query("SELECT COUNT(*) FROM comments WHERE is_active = 1")->fetchColumn();
+$totalPages = ceil($totalComments / $limit);
 
-// Data dummy jurnal untuk katalog di beranda — nanti diganti query dari database / API OJS
-$jurnalTerbaru = [
-  ['judul' => 'Jurnal Pendidikan dan Pembelajaran', 'issn' => '2614-XXXX', 'sinta' => 'SINTA 3', 'warna' => 'bg-emerald-700'],
-  ['judul' => 'Jurnal Teknologi dan Sistem Informasi', 'issn' => '2620-XXXX', 'sinta' => 'SINTA 2', 'warna' => 'bg-sky-800'],
-  ['judul' => 'Jurnal Manajemen dan Bisnis', 'issn' => '2685-XXXX', 'sinta' => 'SINTA 3', 'warna' => 'bg-purple-700'],
-  ['judul' => 'Jurnal Sains dan Teknologi', 'issn' => '2638-XXXX', 'sinta' => 'SINTA 3', 'warna' => 'bg-teal-700'],
-  ['judul' => 'Jurnal Ilmu Sosial dan Humaniora', 'issn' => '2688-XXXX', 'sinta' => 'SINTA 5', 'warna' => 'bg-orange-600'],
-  ['judul' => 'Jurnal Kesehatan Masyarakat', 'issn' => '2716-XXXX', 'sinta' => 'SINTA 4', 'warna' => 'bg-green-800'],
-];
+$stmt = $pdo->prepare("SELECT * FROM comments WHERE is_active = 1 ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
+$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$activeComments = $stmt->fetchAll();
+
+// Ambil data jurnal dari database untuk katalog di beranda
+$jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, link AS url, image AS cover, issn, sinta, warna FROM journals WHERE is_active = 1 ORDER BY id ASC LIMIT 6")->fetchAll();
 ?>
 
   <!-- Hero -->
@@ -128,16 +133,22 @@ $jurnalTerbaru = [
       <a href="/jurnal.php" class="text-sm font-medium text-primary-600 hover:text-primary-700">Lihat Semua Jurnal &rarr;</a>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5">
       <?php foreach ($jurnalTerbaru as $j): ?>
-        <div class="rounded-lg border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow flex flex-col">
-          <div class="aspect-[3/4] <?php echo $j['warna']; ?> p-3 flex items-center justify-center text-center">
-            <span class="text-white text-[11px] font-bold uppercase tracking-wide leading-snug"><?php echo htmlspecialchars($j['judul']); ?></span>
-          </div>
-          <div class="p-3">
-            <p class="text-[11px] text-gray-400 mb-1.5 truncate">e-ISSN: <?php echo $j['issn']; ?></p>
-            <span class="inline-block text-[11px] font-semibold text-primary-700 bg-primary-50 rounded-full px-2 py-0.5 mb-2"><?php echo $j['sinta']; ?></span>
-            <a href="/jurnal.php" class="block text-center text-xs font-semibold text-primary-700 border border-primary-200 rounded-md py-1.5 hover:bg-primary-50 transition-colors">
+        <div class="jurnal-card rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col">
+          <?php if (!empty($j['cover'])): ?>
+            <div class="aspect-[16/7] w-full bg-white flex items-center justify-center overflow-hidden border-b border-gray-100 p-3">
+              <img src="<?php echo htmlspecialchars($j['cover']); ?>" alt="Cover <?php echo htmlspecialchars($j['judul']); ?>" class="w-full h-full object-contain">
+            </div>
+          <?php else: ?>
+            <div class="aspect-[16/7] <?php echo $j['warna']; ?> p-3 flex flex-col justify-center items-center text-center">
+              <span class="text-white text-[11px] font-bold uppercase tracking-wide leading-snug"><?php echo htmlspecialchars($j['judul']); ?></span>
+            </div>
+          <?php endif; ?>
+          <div class="p-4 flex flex-col flex-1">
+            <p class="font-semibold text-gray-900 text-sm mb-1 leading-snug line-clamp-2"><?php echo htmlspecialchars($j['judul']); ?></p>
+            <p class="text-xs text-gray-400 mb-3">e-ISSN: <?php echo $j['issn']; ?></p>
+            <a href="<?php echo htmlspecialchars($j['url']); ?>" target="_blank" class="mt-auto text-center text-sm font-semibold text-primary-700 border border-primary-200 rounded-lg py-2 hover:bg-primary-50 transition-colors">
               Lihat Jurnal
             </a>
           </div>
@@ -192,32 +203,111 @@ $jurnalTerbaru = [
     </div>
   </section>
 
-  <!-- Testimoni (dummy) -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Apa Kata Mereka?</h2>
-    <div class="grid sm:grid-cols-3 gap-6">
-      <?php
-        $testimoniDummy = [
-          ['nama' => 'Dr. Budi Santoso', 'peran' => 'Penulis', 'isi' => 'Proses penerbitan buku sangat mudah dan pendampingannya jelas.'],
-          ['nama' => 'Prof. Siti Nurjanah', 'peran' => 'Editor Jurnal', 'isi' => 'Jurnal kami dikelola dengan baik di OJS Nawa Edukasi, tim responsif sekali.'],
-          ['nama' => 'Dr. Andi Wijaya', 'peran' => 'Dosen', 'isi' => 'Website Nawa Edukasi sangat informatif dan memudahkan kami mendapatkan informasi layanan.'],
-        ];
-      ?>
-      <?php foreach ($testimoniDummy as $t): ?>
-        <div class="p-6 rounded-xl border border-gray-100">
-          <p class="text-sm text-gray-600 leading-relaxed mb-4">&ldquo;<?php echo htmlspecialchars($t['isi']); ?>&rdquo;</p>
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 text-sm font-semibold">
-              <?php echo strtoupper(substr($t['nama'], 0, 1)); ?>
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-gray-900"><?php echo htmlspecialchars($t['nama']); ?></p>
-              <p class="text-xs text-gray-500"><?php echo htmlspecialchars($t['peran']); ?></p>
-            </div>
-          </div>
+  <!-- Testimoni / Komentar -->
+  <section id="komentar" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="grid lg:grid-cols-3 gap-12">
+      <!-- Daftar Komentar -->
+      <div class="lg:col-span-2">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">Komentar & Testimoni</h2>
+        <div class="grid sm:grid-cols-2 gap-6">
+          <?php if(empty($activeComments)): ?>
+            <p class="text-gray-500 text-sm">Belum ada komentar yang ditampilkan.</p>
+          <?php else: ?>
+            <?php foreach ($activeComments as $c): ?>
+              <div class="p-6 rounded-xl border border-gray-100 bg-white shadow-sm">
+                <p class="text-sm text-gray-600 leading-relaxed mb-4">&ldquo;<?php echo nl2br(htmlspecialchars($c['komentar'])); ?>&rdquo;</p>
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 text-sm font-semibold">
+                    <?php echo strtoupper(substr($c['nama'], 0, 1)); ?>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-gray-900"><?php echo htmlspecialchars($c['nama']); ?></p>
+                    <p class="text-xs text-gray-500"><?php echo htmlspecialchars($c['instansi'] ?: '-'); ?></p>
+                  </div>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          <?php endif; ?>
         </div>
-      <?php endforeach; ?>
+        
+        <!-- Pagination Komentar -->
+        <?php if ($totalPages > 1): ?>
+        <div class="flex items-center justify-center gap-2 mt-8">
+            <?php if ($page > 1): ?>
+                <a href="?page=<?php echo $page - 1; ?>#komentar" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">
+                    &laquo;
+                </a>
+            <?php endif; ?>
+            
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <a href="?page=<?php echo $i; ?>#komentar" class="w-9 h-9 flex items-center justify-center rounded-lg <?php echo $i === $page ? 'bg-primary-600 text-white font-semibold' : 'border border-gray-200 text-gray-600 hover:bg-gray-50'; ?>">
+                    <?php echo $i; ?>
+                </a>
+            <?php endfor; ?>
+            
+            <?php if ($page < $totalPages): ?>
+                <a href="?page=<?php echo $page + 1; ?>#komentar" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">
+                    &raquo;
+                </a>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+      </div>
+
+      <!-- Form Tambah Komentar -->
+      <div>
+        <h3 class="text-xl font-bold text-gray-900 mb-6">Tinggalkan Komentar</h3>
+        <form id="comment-form" class="space-y-4" onsubmit="submitComment(event)">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
+            <input type="text" name="nama" required class="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-200">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Instansi / Asal</label>
+            <input type="text" name="instansi" class="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-200">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Komentar *</label>
+            <textarea name="komentar" required rows="4" class="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary-200"></textarea>
+          </div>
+          <button type="submit" class="w-full bg-primary-600 text-white font-semibold rounded-lg px-4 py-2.5 hover:bg-primary-700 transition-colors">
+            Kirim Komentar
+          </button>
+          <p id="comment-msg" class="text-sm mt-2 hidden"></p>
+        </form>
+      </div>
     </div>
   </section>
+
+  <script>
+  function submitComment(e) {
+      e.preventDefault();
+      const form = e.target;
+      const msg = document.getElementById('comment-msg');
+      const formData = new FormData(form);
+
+      fetch('/api/post-comment.php', {
+          method: 'POST',
+          body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+          msg.classList.remove('hidden', 'text-red-600', 'text-green-600');
+          if (data.status === 'success') {
+              msg.classList.add('text-green-600');
+              msg.textContent = data.message;
+              form.reset();
+          } else {
+              msg.classList.add('text-red-600');
+              msg.textContent = data.message;
+          }
+      })
+      .catch(err => {
+          msg.classList.remove('hidden', 'text-green-600');
+          msg.classList.add('text-red-600');
+          msg.textContent = 'Terjadi kesalahan sistem.';
+      });
+  }
+  </script>
 
 <?php include 'includes/footer.php'; ?>
