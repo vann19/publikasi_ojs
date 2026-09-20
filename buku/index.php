@@ -2,30 +2,17 @@
 $activePage = 'buku';
 include '../includes/header.php';
 
-// Data dummy kategori & buku — nanti diganti query database
+require_once '../includes/db.php';
+$pdo = getDB();
 $kategoriList = [
   ['nama' => 'Semua Kategori', 'jumlah' => 86, 'aktif' => true],
+  ['nama' => 'Cerpen', 'jumlah' => 28],
   ['nama' => 'Pendidikan', 'jumlah' => 28],
-  ['nama' => 'Metodologi Penelitian', 'jumlah' => 16],
-  ['nama' => 'Manajemen', 'jumlah' => 12],
-  ['nama' => 'Teknologi', 'jumlah' => 10],
-  ['nama' => 'Sosial & Humaniora', 'jumlah' => 6],
-  ['nama' => 'Ekonomi', 'jumlah' => 8],
-  ['nama' => 'Lainnya', 'jumlah' => 4],
 ];
 
-$bukuList = [
-  ['judul' => 'Metodologi Penelitian Pendidikan', 'penulis' => 'Dr. Budi Santoso', 'tahun' => 2024, 'harga' => 'Rp100.000', 'warna' => 'bg-emerald-700'],
-  ['judul' => 'Manajemen Pendidikan di Era Digital', 'penulis' => 'Prof. Siti Nurjanah', 'tahun' => 2024, 'harga' => 'Rp95.000', 'warna' => 'bg-sky-700'],
-  ['judul' => 'Literasi Digital dalam Pembelajaran', 'penulis' => 'Dr. Andi Wijaya', 'tahun' => 2024, 'harga' => 'Rp90.000', 'warna' => 'bg-orange-600'],
-  ['judul' => 'Inovasi Pembelajaran untuk Abad 21', 'penulis' => 'Dr. Rina Marlina', 'tahun' => 2024, 'harga' => 'Rp90.000', 'warna' => 'bg-indigo-700'],
-  ['judul' => 'Statistika untuk Penelitian', 'penulis' => 'Dr. Ahmad Fauzi', 'tahun' => 2024, 'harga' => 'Rp85.000', 'warna' => 'bg-rose-700'],
-  ['judul' => 'Evaluasi Pembelajaran', 'penulis' => 'Dr. Dewi Lestari', 'tahun' => 2024, 'harga' => 'Rp80.000', 'warna' => 'bg-teal-700'],
-  ['judul' => 'Pengantar Kecerdasan Buatan', 'penulis' => 'Dr. Fajar Ramadhan', 'tahun' => 2024, 'harga' => 'Rp120.000', 'warna' => 'bg-purple-700'],
-  ['judul' => 'Teknologi Informasi dalam Pendidikan', 'penulis' => 'Dr. Yudi Kurniawan', 'tahun' => 2024, 'harga' => 'Rp95.000', 'warna' => 'bg-slate-700'],
-];
+$bukuList = $pdo->query("SELECT * FROM books ORDER BY created_at DESC")->fetchAll();
 
-$totalBuku = 86; // dummy, nanti dari COUNT(*) query
+$totalBuku = count($bukuList);
 $jumlahDitampilkan = count($bukuList);
 ?>
 
@@ -142,16 +129,23 @@ $jumlahDitampilkan = count($bukuList);
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
         <?php foreach ($bukuList as $buku): ?>
           <div class="group">
-            <a href="detail.php">
-              <div class="aspect-[3/4] rounded-lg <?php echo $buku['warna']; ?> p-4 flex items-end shadow-sm group-hover:shadow-md transition-shadow">
-                <span class="text-white text-xs font-semibold leading-snug"><?php echo htmlspecialchars($buku['judul']); ?></span>
+            <a href="#">
+              <div class="aspect-[3/4] rounded-lg bg-gray-200 overflow-hidden flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow relative">
+                <?php if ($buku['image']): ?>
+                    <img src="<?php echo htmlspecialchars($buku['image']); ?>" alt="Cover" class="w-full h-full object-cover">
+                <?php else: ?>
+                    <span class="text-gray-400 text-xs font-semibold leading-snug p-4 text-center"><?php echo htmlspecialchars($buku['title']); ?></span>
+                <?php endif; ?>
               </div>
             </a>
-            <p class="mt-2 text-sm font-medium text-gray-900 line-clamp-2"><?php echo htmlspecialchars($buku['judul']); ?></p>
-            <p class="text-xs text-gray-500"><?php echo htmlspecialchars($buku['penulis']); ?></p>
-            <p class="text-xs text-gray-400"><?php echo $buku['tahun']; ?></p>
-            <p class="text-sm font-semibold text-primary-700 mt-0.5"><?php echo htmlspecialchars($buku['harga']); ?></p>
-            <a href="detail.php" class="inline-flex items-center gap-1 mt-2 text-sm font-medium text-primary-600 hover:text-primary-700">
+            <p class="mt-2 text-sm font-medium text-gray-900 line-clamp-2"><?php echo htmlspecialchars($buku['title']); ?></p>
+            <p class="text-xs text-primary-600 font-medium mt-1"><?php echo htmlspecialchars($buku['category'] ?? '-'); ?></p>
+            <p class="text-xs text-gray-500"><?php echo htmlspecialchars($buku['author']); ?></p>
+            <p class="text-xs text-gray-400"><?php echo $buku['published_date'] ? date('Y', strtotime($buku['published_date'])) : '-'; ?></p>
+            <p class="text-sm font-semibold text-primary-700 mt-0.5">
+                <?php echo $buku['harga'] ? 'Rp' . number_format($buku['harga'], 0, ',', '.') : 'Gratis / TBD'; ?>
+            </p>
+            <a href="#" class="inline-flex items-center gap-1 mt-2 text-sm font-medium text-primary-600 hover:text-primary-700">
               Lihat Detail &rarr;
             </a>
           </div>

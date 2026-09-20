@@ -1,0 +1,82 @@
+[
+    {
+        "path": "al-khazin",
+        "judul": "Al-Khazin: Jurnal Pendidikan Agama Islam",
+        "deskripsi": "Jurnal ilmiah Al-Khazin: Jurnal Pendidikan Agama Islam dari Nawa Edukasi.",
+        "issn": "ISSN",
+        "sinta": "SINTA",
+        "warna": "bg-emerald-700",
+        "url": "https:\/\/e-journal.nawaedukasi.org\/index.php\/al-khazin",
+        "cover": "https:\/\/e-journal.nawaedukasi.org\/public\/journals\/3\/pageHeaderLogoImage_en.jpg"
+    },
+    {
+        "path": "jimulti",
+        "judul": "Jurnal Ilmu Pendidikan",
+        "deskripsi": "Jurnal ilmiah Jurnal Ilmu Pendidikan dari Nawa Edukasi.",
+        "issn": "ISSN",
+        "sinta": "SINTA",
+        "warna": "bg-sky-800",
+        "url": "https:\/\/e-journal.nawaedukasi.org\/index.php\/jimulti",
+        "cover": "https:\/\/e-journal.nawaedukasi.org\/public\/journals\/1\/pageHeaderLogoImage_en.jpg"
+    },
+    {
+        "path": "bayan",
+        "judul": "BAYAN: Jurnal Studi Islam dan Humaniora",
+        "deskripsi": "Jurnal ilmiah BAYAN: Jurnal Studi Islam dan Humaniora dari Nawa Edukasi.",
+        "issn": "ISSN",
+        "sinta": "SINTA",
+        "warna": "bg-purple-700",
+        "url": "https:\/\/e-journal.nawaedukasi.org\/index.php\/bayan",
+        "cover": "https:\/\/e-journal.nawaedukasi.org\/public\/journals\/2\/pageHeaderLogoImage_en.jpg"
+    },
+    {
+        "path": "al-qalam",
+        "judul": "Al-Qalam: Jurnal Pendidikan Bahasa Arab",
+        "deskripsi": "Jurnal ilmiah Al-Qalam: Jurnal Pendidikan Bahasa Arab dari Nawa Edukasi.",
+        "issn": "ISSN",
+        "sinta": "SINTA",
+        "warna": "bg-teal-700",
+        "url": "https:\/\/e-journal.nawaedukasi.org\/index.php\/al-qalam",
+        "cover": "https:\/\/e-journal.nawaedukasi.org\/public\/journals\/7\/pageHeaderLogoImage_en.jpg"
+    },
+    {
+        "path": "jdbf",
+        "judul": "Journal of Digital Banking and Finance",
+        "deskripsi": "Jurnal ilmiah Journal of Digital Banking and Finance dari Nawa Edukasi.",
+        "issn": "ISSN",
+        "sinta": "SINTA",
+        "warna": "bg-orange-600",
+        "url": "https:\/\/e-journal.nawaedukasi.org\/index.php\/jdbf",
+        "cover": "https:\/\/e-journal.nawaedukasi.org\/public\/journals\/10\/pageHeaderLogoImage_en.png"
+    },
+    {
+        "path": "jems",
+        "judul": "Journal of Education and Multidisciplinary Studies",
+        "deskripsi": "Jurnal ilmiah Journal of Education and Multidisciplinary Studies dari Nawa Edukasi.",
+        "issn": "ISSN",
+        "sinta": "SINTA",
+        "warna": "bg-green-800",
+        "url": "https:\/\/e-journal.nawaedukasi.org\/index.php\/jems",
+        "cover": "https:\/\/e-journal.nawaedukasi.org\/public\/journals\/8\/pageHeaderLogoImage_en.png"
+    },
+    {
+        "path": "jpkm",
+        "judul": "SEHATI: Jurnal Pengabdian Kepada Masyarakat",
+        "deskripsi": "Jurnal ilmiah SEHATI: Jurnal Pengabdian Kepada Masyarakat dari Nawa Edukasi.",
+        "issn": "ISSN",
+        "sinta": "SINTA",
+        "warna": "bg-rose-800",
+        "url": "https:\/\/e-journal.nawaedukasi.org\/index.php\/jpkm",
+        "cover": "https:\/\/e-journal.nawaedukasi.org\/public\/journals\/4\/pageHeaderLogoImage_en.jpg"
+    },
+    {
+        "path": "al-hikmah",
+        "judul": "Al-Hikmah: Journal of Islamic Educational Psychology and Guidance Counseling",
+        "deskripsi": "Jurnal ilmiah Al-Hikmah: Journal of Islamic Educational Psychology and Guidance Counseling dari Nawa Edukasi.",
+        "issn": "ISSN",
+        "sinta": "SINTA",
+        "warna": "bg-slate-700",
+        "url": "https:\/\/e-journal.nawaedukasi.org\/index.php\/al-hikmah",
+        "cover": "https:\/\/e-journal.nawaedukasi.org\/public\/journals\/9\/pageHeaderLogoImage_en.jpg"
+    }
+]

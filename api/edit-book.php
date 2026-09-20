@@ -6,6 +6,7 @@ require_once '../includes/db.php';
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = $_POST['id'] ?? null;
     $title = $_POST['title'] ?? '';
     $author = $_POST['author'] ?? '';
     $category = $_POST['category'] ?? '';
@@ -17,12 +18,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $country = $_POST['country'] ?? '';
     $language = $_POST['language'] ?? '';
     $description = $_POST['description'] ?? '';
-    $imagePath = null;
 
-    if (empty($title) || empty($author)) {
-        echo json_encode(['status' => 'error', 'message' => 'Judul dan Penulis wajib diisi']);
+    if (!$id || empty($title) || empty($author)) {
+        echo json_encode(['status' => 'error', 'message' => 'ID, Judul, dan Penulis wajib diisi']);
         exit;
     }
+
+    $pdo = getDB();
+    $stmt = $pdo->prepare("SELECT image FROM books WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+    $book = $stmt->fetch();
+    $imagePath = $book ? $book['image'] : null;
+
+
 
     // Handle file upload
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
@@ -53,6 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
+            // Delete old image if exists
+            if ($imagePath && file_exists(__DIR__ . '/..' . $imagePath)) {
+                unlink(__DIR__ . '/..' . $imagePath);
+            }
             $imagePath = '/storage/books/' . $filename;
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Gagal mengupload foto']);
@@ -60,10 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $pdo = getDB();
-    $stmt = $pdo->prepare("INSERT INTO books (title, author, category, harga, publisher, published_date, isbn, pages, country, language, description, image) VALUES (:title, :author, :category, :harga, :publisher, :published_date, :isbn, :pages, :country, :language, :description, :image)");
+    $stmt = $pdo->prepare("UPDATE books SET title = :title, author = :author, category = :category, harga = :harga, publisher = :publisher, published_date = :published_date, isbn = :isbn, pages = :pages, country = :country, language = :language, description = :description, image = :image WHERE id = :id");
 
     $success = $stmt->execute([
+        'id' => $id,
         'title' => $title,
         'author' => $author,
         'category' => $category,
@@ -79,9 +91,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
 
     if ($success) {
-        echo json_encode(['status' => 'success', 'message' => 'Buku berhasil ditambahkan', 'image' => $imagePath]);
+        echo json_encode(['status' => 'success', 'message' => 'Buku berhasil diupdate', 'image' => $imagePath]);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Gagal menambahkan buku']);
+        echo json_encode(['status' => 'error', 'message' => 'Gagal mengupdate buku']);
     }
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Metode request tidak diizinkan']);
