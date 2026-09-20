@@ -1,6 +1,10 @@
 <?php
 $activePage = 'beranda';
-include 'includes/header.php'; ?>
+include 'includes/header.php'; 
+require_once 'includes/db.php';
+$pdo = getDB();
+$latestBooks = $pdo->query("SELECT * FROM books ORDER BY created_at DESC LIMIT 6")->fetchAll();
+?>
 
   <!-- Hero -->
   <section class="relative overflow-hidden">
@@ -81,7 +85,29 @@ include 'includes/header.php'; ?>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
-      <?php /* Data buku akan diisi dari database */ ?>
+      <?php if (count($latestBooks) > 0): ?>
+        <?php foreach ($latestBooks as $buku): ?>
+          <div class="group">
+            <a href="/buku">
+              <div class="aspect-[3/4] rounded-lg bg-gray-200 overflow-hidden flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow relative">
+                <?php if ($buku['image']): ?>
+                    <img src="<?php echo htmlspecialchars($buku['image']); ?>" alt="Cover" class="w-full h-full object-cover">
+                <?php else: ?>
+                    <span class="text-gray-400 text-xs font-semibold leading-snug p-4 text-center"><?php echo htmlspecialchars($buku['title']); ?></span>
+                <?php endif; ?>
+              </div>
+            </a>
+            <p class="mt-2 text-sm font-medium text-gray-900 line-clamp-2"><?php echo htmlspecialchars($buku['title']); ?></p>
+            <p class="text-xs text-primary-600 font-medium mt-1"><?php echo htmlspecialchars($buku['category'] ?? '-'); ?></p>
+            <p class="text-xs text-gray-500"><?php echo htmlspecialchars($buku['author']); ?></p>
+            <p class="text-sm font-semibold text-primary-700 mt-0.5">
+                <?php echo $buku['harga'] ? 'Rp' . number_format($buku['harga'], 0, ',', '.') : 'Gratis / TBD'; ?>
+            </p>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p class="text-sm text-gray-500 col-span-full">Belum ada buku yang diterbitkan.</p>
+      <?php endif; ?>
     </div>
   </section>
 

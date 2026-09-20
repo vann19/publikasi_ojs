@@ -25,12 +25,18 @@ $adminPage = $adminPage ?? 'dashboard';
 
         <a href="/admin/buku.php" class="flex items-center gap-3 px-4 py-3 rounded-lg <?php echo $adminPage === 'buku' ? 'bg-white/10 text-white' : 'text-gray-300 hover:bg-white/10 hover:text-white transition-colors'; ?> font-medium">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.04A8.97 8.97 0 006 3.75c-1.05 0-2.06.18-3 .5v14.25A8.99 8.99 0 016 18c2.3 0 4.4.87 6 2.29m0-14.25a8.97 8.97 0 016-2.29c1.05 0 2.06.18 3 .5v14.25A8.99 8.99 0 0018 18a8.97 8.97 0 00-6 2.29m0-14.25v14.25" /></svg>
-            Tambah Buku
+            Kelola Buku
         </a>
         <a href="/admin/jurnal.php" class="flex items-center gap-3 px-4 py-3 rounded-lg <?php echo $adminPage === 'jurnal' ? 'bg-white/10 text-white' : 'text-gray-300 hover:bg-white/10 hover:text-white transition-colors'; ?> font-medium">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.5L17 7.5V19a2 2 0 01-2 2z" /></svg>
-            Tambah Jurnal
+            Kelola Jurnal
         </a>
+
+        <a href="/admin/komentar.php" class="flex items-center gap-3 px-4 py-3 rounded-lg <?php echo $adminPage === 'komentar' ? 'bg-white/10 text-white' : 'text-gray-300 hover:bg-white/10 hover:text-white transition-colors'; ?> font-medium">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.5L17 7.5V19a2 2 0 01-2 2z" /></svg>
+            Kelola Komentar
+        </a>
+
 
         <p class="px-4 text-xs uppercase tracking-wider text-gray-400 mt-6 mb-3">Lainnya</p>
 

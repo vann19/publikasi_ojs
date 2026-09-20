@@ -1,15 +1,18 @@
 <?php
 require_once '../includes/auth.php';
 checkAuth();
+require_once '../includes/db.php';
 
 $adminPage = 'buku';
+$pdo = getDB();
+$books = $pdo->query("SELECT * FROM books ORDER BY created_at DESC")->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tambah Buku | Admin Nawa Edukasi</title>
+  <title>Kelola Buku | Admin Nawa Edukasi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/output.css">
@@ -27,7 +30,7 @@ $adminPage = 'buku';
                 <button onclick="toggleSidebar()" class="md:hidden text-gray-600 hover:text-gray-900">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
-                <h1 class="text-xl font-bold text-gray-900">Tambah Buku</h1>
+                <h1 class="text-xl font-bold text-gray-900">Kelola Buku</h1>
             </div>
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center">
@@ -39,48 +42,54 @@ $adminPage = 'buku';
 
         <!-- Page Content -->
         <main class="flex-1 overflow-y-auto p-6 sm:p-8">
-            <div class="max-w-2xl mx-auto">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-900">Daftar Buku</h2>
+                    <a href="buku_tambah.php" class="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                        + Tambah Buku
+                    </a>
+                </div>
 
-                <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4 border-b pb-2">Tambah Buku Baru</h2>
-                    <div id="book-alert" class="hidden mb-4 p-4 text-sm rounded-lg"></div>
-                    <form id="form-add-book">
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Judul Buku *</label>
-                            <input type="text" name="title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" required>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Penulis *</label>
-                            <input type="text" name="author" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500" required>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Penerbit</label>
-                                <input type="text" name="publisher" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Tahun Terbit</label>
-                                <input type="number" name="published_year" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                            </div>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
-                            <input type="text" name="isbn" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                            <textarea name="description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"></textarea>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Foto Cover Buku</label>
-                            <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif" onchange="previewImage(this, 'book-preview')" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
-                            <p class="mt-1 text-xs text-gray-400">Format: JPG, PNG, WebP, GIF. Maksimal 2 MB.</p>
-                            <img id="book-preview" src="" alt="" class="mt-3 max-h-40 rounded-lg border border-gray-200 hidden">
-                        </div>
-                        <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
-                            Simpan Buku
-                        </button>
-                    </form>
+                <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-200">
+                                <th class="py-3 px-4 font-semibold text-sm text-gray-700">Cover</th>
+                                <th class="py-3 px-4 font-semibold text-sm text-gray-700">Judul</th>
+                                <th class="py-3 px-4 font-semibold text-sm text-gray-700">Penulis</th>
+                                <th class="py-3 px-4 font-semibold text-sm text-gray-700">Kategori</th>
+                                <th class="py-3 px-4 font-semibold text-sm text-gray-700 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (count($books) > 0): ?>
+                                <?php foreach ($books as $book): ?>
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="py-3 px-4">
+                                        <?php if ($book['image']): ?>
+                                            <img src="<?php echo htmlspecialchars($book['image']); ?>" alt="Cover" class="w-12 h-16 object-cover rounded shadow-sm">
+                                        <?php else: ?>
+                                            <div class="w-12 h-16 bg-gray-200 flex items-center justify-center rounded text-xs text-gray-500">No Img</div>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="py-3 px-4 text-sm font-medium text-gray-900"><?php echo htmlspecialchars($book['title']); ?></td>
+                                    <td class="py-3 px-4 text-sm text-gray-600"><?php echo htmlspecialchars($book['author']); ?></td>
+                                    <td class="py-3 px-4 text-sm text-gray-600"><?php echo htmlspecialchars($book['category'] ?? '-'); ?></td>
+                                    <td class="py-3 px-4 text-center">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <a href="buku_edit.php?id=<?php echo $book['id']; ?>" class="text-primary-600 hover:text-primary-800 text-sm font-medium">Edit</a>
+                                            <button onclick="deleteBook(<?php echo $book['id']; ?>)" class="text-red-600 hover:text-red-800 text-sm font-medium">Hapus</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="5" class="py-6 text-center text-gray-500">Belum ada buku.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
 
             </div>
@@ -89,53 +98,22 @@ $adminPage = 'buku';
 </div>
 
 <script>
-function previewImage(input, previewId) {
-    const preview = document.getElementById(previewId);
-    if (input.files && input.files[0]) {
-        const file = input.files[0];
-        if (file.size > 2 * 1024 * 1024) {
-            alert('Ukuran foto maksimal 2 MB!');
-            input.value = '';
-            preview.classList.add('hidden');
-            return;
+async function deleteBook(id) {
+    if (!confirm('Yakin ingin menghapus buku ini?')) return;
+    try {
+        const formData = new FormData();
+        formData.append('id', id);
+        const res = await fetch('/api/delete-book.php', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.status === 'success') {
+            window.location.href = '/buku/'; // Redirect per user request
+        } else {
+            alert(data.message || 'Gagal menghapus buku');
         }
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            preview.src = e.target.result;
-            preview.classList.remove('hidden');
-        };
-        reader.readAsDataURL(file);
-    } else {
-        preview.classList.add('hidden');
+    } catch (e) {
+        alert('Terjadi kesalahan sistem.');
     }
 }
-
-document.getElementById('form-add-book').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const alertBox = document.getElementById('book-alert');
-
-    try {
-        const response = await fetch('/api/add-book.php', {
-            method: 'POST',
-            body: formData
-        });
-        const data = await response.json();
-
-        alertBox.className = data.status === 'success'
-            ? 'mb-4 p-4 text-sm rounded-lg bg-green-50 text-green-800 block'
-            : 'mb-4 p-4 text-sm rounded-lg bg-red-50 text-red-800 block';
-        alertBox.textContent = data.message;
-
-        if (data.status === 'success') {
-            e.target.reset();
-            document.getElementById('book-preview').classList.add('hidden');
-        }
-    } catch (error) {
-        alertBox.className = 'mb-4 p-4 text-sm rounded-lg bg-red-50 text-red-800 block';
-        alertBox.textContent = 'Terjadi kesalahan sistem.';
-    }
-});
 </script>
 
 </body>

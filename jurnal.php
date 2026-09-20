@@ -1,20 +1,13 @@
 <?php
 $activePage = 'jurnal';
 include 'includes/header.php';
+require_once 'includes/db.php';
 
-// Data dummy jurnal — nanti diganti query dari database / API OJS
-$jurnalList = [
-  ['judul' => 'Jurnal Pendidikan dan Pembelajaran', 'issn' => '2614-XXXX', 'sinta' => 'SINTA 3', 'deskripsi' => 'Kajian di bidang pendidikan dan pembelajaran.', 'warna' => 'bg-emerald-700'],
-  ['judul' => 'Jurnal Teknologi dan Sistem Informasi', 'issn' => '2620-XXXX', 'sinta' => 'SINTA 2', 'deskripsi' => 'Penelitian di bidang teknologi informasi dan komputer.', 'warna' => 'bg-sky-800'],
-  ['judul' => 'Jurnal Manajemen dan Bisnis', 'issn' => '2685-XXXX', 'sinta' => 'SINTA 3', 'deskripsi' => 'Kajian penelitian di bidang manajemen, bisnis, dan organisasi.', 'warna' => 'bg-purple-700'],
-  ['judul' => 'Jurnal Sains dan Teknologi', 'issn' => '2638-XXXX', 'sinta' => 'SINTA 3', 'deskripsi' => 'Jurnal penelitian di bidang sains dasar dan terapan.', 'warna' => 'bg-teal-700'],
-  ['judul' => 'Jurnal Ilmu Sosial dan Humaniora', 'issn' => '2688-XXXX', 'sinta' => 'SINTA 5', 'deskripsi' => 'Publikasi penelitian di bidang sosial dan humaniora.', 'warna' => 'bg-orange-600'],
-  ['judul' => 'Jurnal Kesehatan Masyarakat', 'issn' => '2716-XXXX', 'sinta' => 'SINTA 4', 'deskripsi' => 'Kajian penelitian di bidang kesehatan masyarakat dan lingkungan.', 'warna' => 'bg-green-800'],
-  ['judul' => 'Jurnal Hukum dan Kebijakan', 'issn' => '2720-XXXX', 'sinta' => 'SINTA 3', 'deskripsi' => 'Kajian hukum dan regulasi di Indonesia.', 'warna' => 'bg-rose-800'],
-  ['judul' => 'Jurnal Ekonomi dan Pembangunan', 'issn' => '2688-XXXX', 'sinta' => 'SINTA 4', 'deskripsi' => 'Publikasi penelitian di bidang ekonomi, pembangunan, dan kebijakan.', 'warna' => 'bg-slate-700'],
-];
+$pdo = getDB();
+$stmt = $pdo->query("SELECT title AS judul, description AS deskripsi, link AS url, image AS cover, issn, sinta, warna FROM journals WHERE is_active = 1 ORDER BY id ASC");
+$jurnalList = $stmt->fetchAll();
 
-$totalJurnal = 12; // dummy
+$totalJurnal = count($jurnalList);
 $jumlahDitampilkan = count($jurnalList);
 ?>
 
@@ -88,48 +81,41 @@ $jumlahDitampilkan = count($jurnalList);
   <!-- Daftar Jurnal -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
-    <!-- Search + filter -->
-    <div class="flex flex-col lg:flex-row gap-3 mb-8">
-      <div class="relative flex-1">
+    <!-- Search -->
+    <div class="mb-8">
+      <div class="relative max-w-xl">
         <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <input type="text" placeholder="Cari judul jurnal, e-ISSN / p-ISSN, atau kata kunci..."
-               class="w-full text-sm border border-gray-200 rounded-lg pl-9 pr-4 py-2.5 text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-200">
+        <input type="text" id="search-jurnal" placeholder="Cari nama jurnal..."
+               oninput="filterJurnal()"
+               class="w-full text-sm border border-gray-200 rounded-lg pl-9 pr-9 py-2.5 text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-200">
+        <button type="button" id="btn-clear-search" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
       </div>
-      <select class="text-sm border border-gray-200 rounded-lg px-4 py-2.5 text-gray-600">
-        <option>Semua Bidang</option>
-        <option>Pendidikan</option>
-        <option>Teknologi</option>
-        <option>Ekonomi</option>
-        <option>Sosial &amp; Humaniora</option>
-      </select>
-      <select class="text-sm border border-gray-200 rounded-lg px-4 py-2.5 text-gray-600">
-        <option>Status Akreditasi</option>
-        <option>SINTA 2</option>
-        <option>SINTA 3</option>
-        <option>SINTA 4</option>
-        <option>SINTA 5</option>
-      </select>
-      <button type="button" class="px-6 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors">
-        Cari
-      </button>
     </div>
 
     <div class="flex items-end justify-between mb-6">
       <h2 class="text-xl font-bold text-gray-900">Daftar Jurnal</h2>
-      <p class="text-sm text-gray-500">Menampilkan 1&ndash;<?php echo $jumlahDitampilkan; ?> dari <?php echo $totalJurnal; ?> jurnal</p>
+      <p id="jurnal-counter" class="text-sm text-gray-500">Menampilkan <span id="count-tampil"><?php echo $totalJurnal; ?></span> dari <?php echo $totalJurnal; ?> jurnal</p>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+    <div id="jurnal-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
       <?php foreach ($jurnalList as $j): ?>
-        <div class="rounded-xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow flex flex-col">
-          <div class="aspect-[4/3] <?php echo $j['warna']; ?> p-4 flex flex-col justify-center items-center text-center">
-            <span class="text-white text-xs font-bold uppercase tracking-wide leading-snug"><?php echo htmlspecialchars($j['judul']); ?></span>
-          </div>
+        <div class="jurnal-card rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col"
+             data-judul="<?php echo strtolower(htmlspecialchars($j['judul'])); ?>">
+          <?php if (!empty($j['cover'])): ?>
+            <div class="aspect-[16/7] w-full bg-white flex items-center justify-center overflow-hidden border-b border-gray-100 p-3">
+              <img src="<?php echo htmlspecialchars($j['cover']); ?>" alt="Cover <?php echo htmlspecialchars($j['judul']); ?>" class="w-full h-full object-contain">
+            </div>
+          <?php else: ?>
+            <div class="aspect-[4/3] <?php echo $j['warna']; ?> p-4 flex flex-col justify-center items-center text-center">
+              <span class="text-white text-xs font-bold uppercase tracking-wide leading-snug"><?php echo htmlspecialchars($j['judul']); ?></span>
+            </div>
+          <?php endif; ?>
           <div class="p-4 flex flex-col flex-1">
-            <p class="text-xs text-gray-400 mb-1">e-ISSN: <?php echo $j['issn']; ?></p>
-            <p class="text-sm text-gray-500 leading-relaxed flex-1"><?php echo htmlspecialchars($j['deskripsi']); ?></p>
-            <span class="inline-block w-fit text-xs font-semibold text-primary-700 bg-primary-50 rounded-full px-2.5 py-1 mt-3 mb-3"><?php echo $j['sinta']; ?></span>
-            <a href="jurnal-detail.php" class="text-center text-sm font-semibold text-primary-700 border border-primary-200 rounded-lg py-2 hover:bg-primary-50 transition-colors">
+            <p class="font-semibold text-gray-900 text-sm mb-1 leading-snug"><?php echo htmlspecialchars($j['judul']); ?></p>
+            <p class="text-xs text-gray-400 mb-3">e-ISSN: <?php echo $j['issn']; ?></p>
+            <a href="<?php echo htmlspecialchars($j['url']); ?>" target="_blank" class="mt-auto text-center text-sm font-semibold text-primary-700 border border-primary-200 rounded-lg py-2 hover:bg-primary-50 transition-colors">
               Lihat Jurnal
             </a>
           </div>
@@ -137,15 +123,14 @@ $jumlahDitampilkan = count($jurnalList);
       <?php endforeach; ?>
     </div>
 
-    <!-- Pagination -->
-    <div class="flex items-center justify-center gap-2 mt-12">
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded-lg bg-primary-600 text-white text-sm font-semibold">1</a>
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50">2</a>
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50">3</a>
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:bg-gray-50">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-      </a>
+    <!-- Empty State (tersembunyi secara default) -->
+    <div id="jurnal-empty" class="hidden py-16 flex flex-col items-center justify-center text-center">
+      <svg class="w-14 h-14 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <p class="text-gray-500 font-semibold">Jurnal tidak ditemukan</p>
+      <p class="text-sm text-gray-400 mt-1">Coba kata kunci atau filter yang berbeda.</p>
+      <button onclick="clearSearch()" class="mt-4 text-sm text-primary-600 hover:underline font-medium">Tampilkan semua jurnal</button>
     </div>
+
   </section>
 
   <!-- Apa itu OJS? -->
@@ -184,5 +169,52 @@ $jumlahDitampilkan = count($jurnalList);
       </div>
     </div>
   </section>
+
+<script>
+function filterJurnal() {
+  const keyword  = document.getElementById('search-jurnal').value.toLowerCase().trim();
+  const cards    = document.querySelectorAll('.jurnal-card');
+  const btnClear = document.getElementById('btn-clear-search');
+
+  btnClear.classList.toggle('hidden', keyword === '');
+
+  let visible = 0;
+  cards.forEach(card => {
+    const judul = card.dataset.judul || '';
+    const match = keyword === '' || judul.includes(keyword);
+
+    if (match) {
+      card.classList.remove('hidden');
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(8px)';
+      setTimeout(() => {
+        card.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, 10);
+      visible++;
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+
+  document.getElementById('count-tampil').textContent = visible;
+
+  const emptyEl = document.getElementById('jurnal-empty');
+  const gridEl  = document.getElementById('jurnal-grid');
+  if (visible === 0) {
+    gridEl.classList.add('hidden');
+    emptyEl.classList.remove('hidden');
+  } else {
+    gridEl.classList.remove('hidden');
+    emptyEl.classList.add('hidden');
+  }
+}
+
+function clearSearch() {
+  document.getElementById('search-jurnal').value = '';
+  filterJurnal();
+}
+</script>
 
 <?php include 'includes/footer.php'; ?>
