@@ -1,6 +1,17 @@
 <?php
 $activePage = 'beranda';
-include 'includes/header.php'; ?>
+include 'includes/header.php';
+
+// Data dummy jurnal untuk katalog di beranda — nanti diganti query dari database / API OJS
+$jurnalTerbaru = [
+  ['judul' => 'Jurnal Pendidikan dan Pembelajaran', 'issn' => '2614-XXXX', 'sinta' => 'SINTA 3', 'warna' => 'bg-emerald-700'],
+  ['judul' => 'Jurnal Teknologi dan Sistem Informasi', 'issn' => '2620-XXXX', 'sinta' => 'SINTA 2', 'warna' => 'bg-sky-800'],
+  ['judul' => 'Jurnal Manajemen dan Bisnis', 'issn' => '2685-XXXX', 'sinta' => 'SINTA 3', 'warna' => 'bg-purple-700'],
+  ['judul' => 'Jurnal Sains dan Teknologi', 'issn' => '2638-XXXX', 'sinta' => 'SINTA 3', 'warna' => 'bg-teal-700'],
+  ['judul' => 'Jurnal Ilmu Sosial dan Humaniora', 'issn' => '2688-XXXX', 'sinta' => 'SINTA 5', 'warna' => 'bg-orange-600'],
+  ['judul' => 'Jurnal Kesehatan Masyarakat', 'issn' => '2716-XXXX', 'sinta' => 'SINTA 4', 'warna' => 'bg-green-800'],
+];
+?>
 
   <!-- Hero -->
   <section class="relative overflow-hidden">
@@ -19,10 +30,10 @@ include 'includes/header.php'; ?>
           layanan Hak Kekayaan Intelektual, pengelolaan jurnal ilmiah, seminar, dan layanan akademik lainnya.
         </p>
         <div class="mt-8 flex flex-wrap gap-4">
-          <a href="/buku" class="inline-flex items-center px-6 py-3 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors">
+          <a href="/buku/" class="inline-flex items-center px-6 py-3 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors">
             Jelajahi Buku
           </a>
-          <a href="/layanan" class="inline-flex items-center px-6 py-3 rounded-lg border border-white/60 text-white font-semibold hover:bg-white/10 transition-colors">
+          <a href="/layanan.php" class="inline-flex items-center px-6 py-3 rounded-lg border border-white/60 text-white font-semibold hover:bg-white/10 transition-colors">
             Lihat Layanan
           </a>
         </div>
@@ -40,7 +51,7 @@ include 'includes/header.php'; ?>
         </div>
         <h3 class="font-semibold text-gray-900 mb-1">Penerbitan Buku</h3>
         <p class="text-sm text-gray-500 leading-relaxed">Menerbitkan buku berkualitas dengan proses profesional dari naskah hingga cetak.</p>
-        <a href="/layanan/penerbitan-buku" class="inline-block mt-3 text-sm font-medium text-primary-600 hover:text-primary-700">Selengkapnya &rarr;</a>
+        <a href="/layanan.php" class="inline-block mt-3 text-sm font-medium text-primary-600 hover:text-primary-700">Selengkapnya &rarr;</a>
       </div>
 
       <div class="p-6 rounded-xl border border-gray-100 hover:border-primary-200 transition-colors">
@@ -49,7 +60,7 @@ include 'includes/header.php'; ?>
         </div>
         <h3 class="font-semibold text-gray-900 mb-1">Jurnal Ilmiah (OJS)</h3>
         <p class="text-sm text-gray-500 leading-relaxed">Mengelola jurnal ilmiah melalui sistem Open Journal Systems yang kredibel.</p>
-        <a href="/jurnal" class="inline-block mt-3 text-sm font-medium text-primary-600 hover:text-primary-700">Selengkapnya &rarr;</a>
+        <a href="/jurnal.php" class="inline-block mt-3 text-sm font-medium text-primary-600 hover:text-primary-700">Selengkapnya &rarr;</a>
       </div>
 
       <div class="p-6 rounded-xl border border-gray-100 hover:border-primary-200 transition-colors">
@@ -58,7 +69,7 @@ include 'includes/header.php'; ?>
         </div>
         <h3 class="font-semibold text-gray-900 mb-1">Layanan HKI</h3>
         <p class="text-sm text-gray-500 leading-relaxed">Pendampingan pendaftaran Hak Kekayaan Intelektual untuk karya dan penelitian Anda.</p>
-        <a href="/layanan/hki" class="inline-block mt-3 text-sm font-medium text-primary-600 hover:text-primary-700">Selengkapnya &rarr;</a>
+        <a href="/layanan.php" class="inline-block mt-3 text-sm font-medium text-primary-600 hover:text-primary-700">Selengkapnya &rarr;</a>
       </div>
 
       <div class="p-6 rounded-xl border border-gray-100 hover:border-primary-200 transition-colors">
@@ -67,7 +78,7 @@ include 'includes/header.php'; ?>
         </div>
         <h3 class="font-semibold text-gray-900 mb-1">Seminar</h3>
         <p class="text-sm text-gray-500 leading-relaxed">Menyelenggarakan seminar nasional dan internasional bagi akademisi dan peneliti.</p>
-        <a href="/seminar" class="inline-block mt-3 text-sm font-medium text-primary-600 hover:text-primary-700">Selengkapnya &rarr;</a>
+        <a href="/seminar.php" class="inline-block mt-3 text-sm font-medium text-primary-600 hover:text-primary-700">Selengkapnya &rarr;</a>
       </div>
 
     </div>
@@ -77,11 +88,36 @@ include 'includes/header.php'; ?>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
     <div class="flex items-end justify-between mb-6">
       <h2 class="text-2xl font-bold text-gray-900">Katalog Buku Terbaru</h2>
-      <a href="/buku" class="text-sm font-medium text-primary-600 hover:text-primary-700">Lihat Semua Buku &rarr;</a>
+      <a href="/buku/" class="text-sm font-medium text-primary-600 hover:text-primary-700">Lihat Semua Buku &rarr;</a>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
       <?php /* Data buku akan diisi dari database */ ?>
+    </div>
+  </section>
+
+  <!-- Katalog Jurnal Terbaru (data dummy, nanti diganti query dari DB / API OJS) -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+    <div class="flex items-end justify-between mb-6">
+      <h2 class="text-2xl font-bold text-gray-900">Katalog Jurnal Terbaru</h2>
+      <a href="/jurnal.php" class="text-sm font-medium text-primary-600 hover:text-primary-700">Lihat Semua Jurnal &rarr;</a>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
+      <?php foreach ($jurnalTerbaru as $j): ?>
+        <div class="rounded-lg border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow flex flex-col">
+          <div class="aspect-[3/4] <?php echo $j['warna']; ?> p-3 flex items-center justify-center text-center">
+            <span class="text-white text-[11px] font-bold uppercase tracking-wide leading-snug"><?php echo htmlspecialchars($j['judul']); ?></span>
+          </div>
+          <div class="p-3">
+            <p class="text-[11px] text-gray-400 mb-1.5 truncate">e-ISSN: <?php echo $j['issn']; ?></p>
+            <span class="inline-block text-[11px] font-semibold text-primary-700 bg-primary-50 rounded-full px-2 py-0.5 mb-2"><?php echo $j['sinta']; ?></span>
+            <a href="/jurnal.php" class="block text-center text-xs font-semibold text-primary-700 border border-primary-200 rounded-md py-1.5 hover:bg-primary-50 transition-colors">
+              Lihat Jurnal
+            </a>
+          </div>
+        </div>
+      <?php endforeach; ?>
     </div>
   </section>
 
@@ -92,7 +128,7 @@ include 'includes/header.php'; ?>
         <h3 class="text-xl font-bold text-gray-900 mb-2">Akses Jurnal Ilmiah Kami di OJS</h3>
         <p class="text-sm text-gray-600 leading-relaxed max-w-sm">Temukan berbagai jurnal ilmiah terakreditasi kami yang dikelola dengan sistem Open Journal Systems.</p>
       </div>
-      <a href="/jurnal" class="inline-flex items-center mt-6 px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors w-fit">
+      <a href="/jurnal.php" class="inline-flex items-center mt-6 px-5 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors w-fit">
         Kunjungi OJS
       </a>
     </div>
