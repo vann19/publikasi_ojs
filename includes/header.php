@@ -43,20 +43,7 @@
           <?php $navLink('beranda', 'Beranda', '/'); ?>
           <?php $navLink('tentang-kami', 'Tentang Kami', '/tentang-kami.php'); ?>
 
-          <div class="relative group">
-            <button class="flex items-center gap-1 hover:text-primary-700 transition-colors <?php echo $activePage === 'buku' ? 'text-primary-700 font-semibold' : ''; ?>">
-              Buku
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div class="absolute left-0 top-full pt-3 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-              <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2">
-                <a href="/buku/" class="block px-4 py-2 hover:bg-primary-50 hover:text-primary-700">Katalog Buku</a>
-                <a href="/ajukan-naskah" class="block px-4 py-2 hover:bg-primary-50 hover:text-primary-700">Ajukan Naskah</a>
-              </div>
-            </div>
-          </div>
+          <?php $navLink('buku', 'Buku', '/buku/'); ?>
 
           <?php $navLink('jurnal', 'Jurnal (OJS)', '/jurnal.php'); ?>
           <?php $navLink('seminar', 'Seminar', '/seminar.php'); ?>
@@ -86,19 +73,7 @@
       <?php $navLinkMobile('beranda', 'Beranda', '/'); ?>
       <?php $navLinkMobile('tentang-kami', 'Tentang Kami', '/tentang-kami.php'); ?>
 
-      <!-- Dropdown Buku di mobile -->
-      <div class="border-b border-gray-100">
-        <button id="mobileBukuBtn" class="w-full flex items-center justify-between py-3 px-2 <?php echo $activePage === 'buku' ? 'text-primary-700 font-semibold' : 'hover:text-primary-700'; ?> transition-colors">
-          Buku
-          <svg id="mobileBukuArrow" class="w-4 h-4 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        <div id="mobileBukuMenu" class="hidden bg-gray-50">
-          <a href="/buku/" class="block py-3 px-6 hover:text-primary-700 transition-colors border-b border-gray-100">Katalog Buku</a>
-          <a href="/ajukan-naskah" class="block py-3 px-6 hover:text-primary-700 transition-colors border-b border-gray-100">Ajukan Naskah</a>
-        </div>
-      </div>
+      <?php $navLinkMobile('buku', 'Buku', '/buku/'); ?>
 
       <?php $navLinkMobile('jurnal', 'Jurnal (OJS)', '/jurnal.php'); ?>
       <?php $navLinkMobile('seminar', 'Seminar', '/seminar.php'); ?>

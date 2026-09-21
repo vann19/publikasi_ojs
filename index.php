@@ -92,32 +92,70 @@ $jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, l
     </div>
   </section>
 
-  <!-- Katalog Buku Terbaru (data dummy, nanti diganti query dari DB) -->
+  <!-- Katalog Buku Terbaru -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
     <div class="flex items-end justify-between mb-6">
       <h2 class="text-2xl font-bold text-gray-900">Katalog Buku Terbaru</h2>
       <a href="/buku/" class="text-sm font-medium text-primary-600 hover:text-primary-700">Lihat Semua Buku &rarr;</a>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
+    <?php
+      $whatsappNomor = '6281916200962';
+    ?>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 items-stretch">
       <?php if (count($latestBooks) > 0): ?>
         <?php foreach ($latestBooks as $buku): ?>
-          <div class="group">
-            <a href="/buku">
-              <div class="aspect-[3/4] rounded-lg bg-gray-200 overflow-hidden flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow relative">
-                <?php if ($buku['image']): ?>
-                    <img src="<?php echo htmlspecialchars($buku['image']); ?>" alt="Cover" class="w-full h-full object-cover">
-                <?php else: ?>
-                    <span class="text-gray-400 text-xs font-semibold leading-snug p-4 text-center"><?php echo htmlspecialchars($buku['title']); ?></span>
+          <?php
+            $hargaAngka = $buku['harga'];
+            $hargaText  = $hargaAngka ? 'Rp' . number_format($hargaAngka, 0, ',', '.') : 'Hubungi kami';
+            $pesanWA    = "Halo, saya ingin memesan buku \"{$buku['title']}\" ({$hargaText}).";
+            $linkWA     = 'https://wa.me/' . $whatsappNomor . '?text=' . urlencode($pesanWA);
+          ?>
+          <div class="h-full flex flex-col rounded-xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow bg-white">
+
+            <!-- Cover -->
+            <a href="/buku/detail.php?id=<?php echo $buku['id']; ?>" class="block aspect-[3/4] bg-gray-100 overflow-hidden">
+              <?php if ($buku['image']): ?>
+                <img src="<?php echo htmlspecialchars($buku['image']); ?>" alt="<?php echo htmlspecialchars($buku['title']); ?>" class="w-full h-full object-cover">
+              <?php else: ?>
+                <div class="w-full h-full flex items-center justify-center p-4">
+                  <span class="text-gray-400 text-xs font-semibold text-center leading-snug"><?php echo htmlspecialchars($buku['title']); ?></span>
+                </div>
+              <?php endif; ?>
+            </a>
+
+            <!-- Konten -->
+            <div class="p-3 flex flex-col flex-1">
+              <?php if (!empty($buku['category'])): ?>
+                <p class="text-[11px] font-semibold text-primary-600 uppercase tracking-wide mb-1 truncate"><?php echo htmlspecialchars($buku['category']); ?></p>
+              <?php endif; ?>
+
+              <p class="text-xs font-semibold text-gray-900 leading-snug line-clamp-2 min-h-[2.5rem]"><?php echo htmlspecialchars($buku['title']); ?></p>
+
+              <p class="text-[11px] text-gray-500 mt-1 line-clamp-1"><?php echo htmlspecialchars($buku['author']); ?></p>
+
+              <div class="flex items-center justify-between text-[11px] text-gray-400 mt-1">
+                <span><?php echo $buku['published_date'] ? date('Y', strtotime($buku['published_date'])) : '-'; ?></span>
+                <?php if (!empty($buku['pages'])): ?>
+                  <span><?php echo (int) $buku['pages']; ?> hlm.</span>
                 <?php endif; ?>
               </div>
-            </a>
-            <p class="mt-2 text-sm font-medium text-gray-900 line-clamp-2"><?php echo htmlspecialchars($buku['title']); ?></p>
-            <p class="text-xs text-primary-600 font-medium mt-1"><?php echo htmlspecialchars($buku['category'] ?? '-'); ?></p>
-            <p class="text-xs text-gray-500"><?php echo htmlspecialchars($buku['author']); ?></p>
-            <p class="text-sm font-semibold text-primary-700 mt-0.5">
-                <?php echo $buku['harga'] ? 'Rp' . number_format($buku['harga'], 0, ',', '.') : 'Gratis / TBD'; ?>
-            </p>
+
+              <p class="text-xs font-bold text-primary-700 mt-2"><?php echo $hargaText; ?></p>
+
+              <!-- Tombol selalu di bawah -->
+              <div class="mt-auto pt-3 space-y-2">
+                <a href="/buku/detail.php?id=<?php echo $buku['id']; ?>" class="block text-center text-[11px] font-semibold text-primary-700 border border-primary-200 rounded-lg py-1.5 hover:bg-primary-50 transition-colors">
+                  Detail Buku
+                </a>
+                <a href="<?php echo htmlspecialchars($linkWA); ?>" target="_blank" rel="noopener"
+                   class="flex items-center justify-center gap-1 text-[11px] font-semibold text-white bg-green-600 rounded-lg py-1.5 hover:bg-green-700 transition-colors">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2.25c-5.46 0-9.88 4.42-9.88 9.88 0 1.74.46 3.44 1.33 4.94L2 21.75l4.8-1.46a9.83 9.83 0 004.24.98h.01c5.46 0 9.88-4.42 9.88-9.88 0-5.46-4.42-9.88-9.89-9.88Zm5.7 14.02c-.24.68-1.4 1.3-1.93 1.34-.5.05-.99.24-3.32-.7-2.8-1.14-4.6-3.98-4.75-4.16-.14-.19-1.14-1.52-1.14-2.9 0-1.37.72-2.05.98-2.33.26-.28.56-.35.75-.35h.53c.17 0 .4-.06.62.48.24.58.8 2 .87 2.14.07.14.12.31.02.5-.1.19-.15.31-.3.48-.15.17-.31.38-.44.51-.15.15-.3.3-.13.6.17.3.77 1.27 1.65 2.06 1.14 1.02 2.09 1.34 2.39 1.49.3.15.47.13.65-.08.17-.2.74-.86.94-1.16.2-.3.4-.25.66-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.13.07.75-.17 1.43Z"/></svg>
+                  WhatsApp
+                </a>
+              </div>
+            </div>
           </div>
         <?php endforeach; ?>
       <?php else: ?>

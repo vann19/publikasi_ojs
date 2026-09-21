@@ -83,17 +83,6 @@
       iconClose.classList.toggle('hidden', isHidden);
     });
 
-    // Dropdown Buku di mobile
-    const mobileBukuBtn = document.getElementById('mobileBukuBtn');
-    const mobileBukuMenu = document.getElementById('mobileBukuMenu');
-    const mobileBukuArrow = document.getElementById('mobileBukuArrow');
-
-    if (mobileBukuBtn) {
-      mobileBukuBtn.addEventListener('click', function () {
-        mobileBukuMenu.classList.toggle('hidden');
-        mobileBukuArrow.classList.toggle('rotate-180');
-      });
-    }
   </script>
 </body>
 </html>
