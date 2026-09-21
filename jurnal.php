@@ -105,14 +105,14 @@ $jumlahDitampilkan = count($jurnalList);
 
     <div id="jurnal-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
       <?php foreach ($jurnalList as $j): ?>
-        <div class="jurnal-card rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col"
+        <div class="jurnal-card rounded-xl border border-gray-100 overflow-hidden shadow-md hover:shadow-lg transition-all duration-200 flex flex-col"
              data-judul="<?php echo strtolower(htmlspecialchars($j['judul'])); ?>">
           <?php if (!empty($j['cover'])): ?>
-            <div class="aspect-[16/7] w-full bg-white flex items-center justify-center overflow-hidden border-b border-gray-100 p-3">
-              <img src="<?php echo htmlspecialchars($j['cover']); ?>" alt="Cover <?php echo htmlspecialchars($j['judul']); ?>" class="w-full h-full object-contain">
+            <div class="aspect-[3/4] w-full bg-gray-100 overflow-hidden">
+              <img src="<?php echo htmlspecialchars($j['cover']); ?>" alt="Cover <?php echo htmlspecialchars($j['judul']); ?>" class="w-full h-full object-cover">
             </div>
           <?php else: ?>
-            <div class="aspect-[4/3] <?php echo $j['warna']; ?> p-4 flex flex-col justify-center items-center text-center">
+            <div class="aspect-[3/4] <?php echo $j['warna']; ?> p-4 flex flex-col justify-center items-center text-center">
               <span class="text-white text-xs font-bold uppercase tracking-wide leading-snug"><?php echo htmlspecialchars($j['judul']); ?></span>
             </div>
           <?php endif; ?>
@@ -148,9 +148,9 @@ $jumlahDitampilkan = count($jurnalList);
           <p class="text-sm text-gray-600 leading-relaxed mb-4">
             OJS (Open Journal Systems) adalah sistem pengelolaan jurnal open source yang digunakan untuk menerbitkan dan mengelola jurnal ilmiah secara online.
           </p>
-          <a href="#" class="inline-flex items-center gap-2 text-sm font-semibold text-primary-700 border border-primary-200 rounded-lg px-4 py-2 hover:bg-white transition-colors">
-            Pelajari Selengkapnya
-          </a>
+        <a href="https://e-journal.nawaedukasi.org" target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm font-semibold text-primary-700 border border-primary-200 rounded-lg px-4 py-2 hover:bg-white transition-colors">
+          Pelajari Selengkapnya
+        </a>
         </div>
         <div>
           <h3 class="text-lg font-bold text-gray-900 mb-3">Untuk Pengguna</h3>

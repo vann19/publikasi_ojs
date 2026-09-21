@@ -25,7 +25,7 @@ include 'includes/header.php';
     <!-- Info kontak -->
     <div class="lg:col-span-2 space-y-6">
 
-      <div class="rounded-2xl border border-gray-100 p-6 space-y-6">
+      <div class="rounded-2xl border border-gray-100 shadow-md p-6 space-y-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
         <div class="flex gap-4">
           <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center shrink-0">
             <svg class="w-5 h-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.5-7.5 11.25-7.5 11.25S4.5 18 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
@@ -75,7 +75,7 @@ include 'includes/header.php';
 
     <!-- Form -->
     <div class="lg:col-span-3">
-      <div class="rounded-2xl border border-gray-100 p-8">
+      <div class="rounded-2xl border border-gray-100 shadow-md p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
         <h2 class="text-lg font-bold text-gray-900 mb-1">Kirim Pesan</h2>
         <p class="text-sm text-gray-500 mb-6">Isi form di bawah ini, tim kami akan menghubungi Anda kembali.</p>
 

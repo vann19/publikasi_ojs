@@ -60,7 +60,7 @@ $keunggulanList = [
   <!-- Daftar Layanan -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-6">
     <?php foreach ($layananList as $l): ?>
-      <div class="rounded-2xl border border-gray-100 p-8 flex flex-col sm:flex-row gap-6 items-start hover:border-primary-200 hover:shadow-sm transition-all">
+      <div class="rounded-2xl border border-gray-100 shadow-md p-8 flex flex-col sm:flex-row gap-6 items-start hover:border-primary-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
         <div class="w-14 h-14 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
           <svg class="w-7 h-7 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="<?php echo $l['icon']; ?>" />

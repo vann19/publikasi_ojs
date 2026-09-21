@@ -112,7 +112,7 @@ $jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, l
             $pesanWA    = "Halo, saya ingin memesan buku \"{$buku['title']}\" ({$hargaText}).";
             $linkWA     = 'https://wa.me/' . $whatsappNomor . '?text=' . urlencode($pesanWA);
           ?>
-          <div class="h-full flex flex-col rounded-xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow bg-white">
+          <div class="h-full flex flex-col rounded-xl border border-gray-100 overflow-hidden shadow-md hover:shadow-lg transition-shadow bg-white">
 
             <!-- Cover -->
             <a href="/buku/detail.php?id=<?php echo $buku['id']; ?>" class="block aspect-[3/4] bg-gray-100 overflow-hidden">
@@ -173,13 +173,13 @@ $jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, l
 
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5">
       <?php foreach ($jurnalTerbaru as $j): ?>
-        <div class="jurnal-card rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col">
+        <div class="jurnal-card rounded-xl border border-gray-100 overflow-hidden shadow-md hover:shadow-lg transition-all duration-200 flex flex-col">
           <?php if (!empty($j['cover'])): ?>
-            <div class="aspect-[16/7] w-full bg-white flex items-center justify-center overflow-hidden border-b border-gray-100 p-3">
-              <img src="<?php echo htmlspecialchars($j['cover']); ?>" alt="Cover <?php echo htmlspecialchars($j['judul']); ?>" class="w-full h-full object-contain">
+            <div class="aspect-[3/4] w-full bg-gray-100 overflow-hidden">
+              <img src="<?php echo htmlspecialchars($j['cover']); ?>" alt="Cover <?php echo htmlspecialchars($j['judul']); ?>" class="w-full h-full object-cover">
             </div>
           <?php else: ?>
-            <div class="aspect-[16/7] <?php echo $j['warna']; ?> p-3 flex flex-col justify-center items-center text-center">
+            <div class="aspect-[3/4] <?php echo $j['warna']; ?> p-3 flex flex-col justify-center items-center text-center">
               <span class="text-white text-[11px] font-bold uppercase tracking-wide leading-snug"><?php echo htmlspecialchars($j['judul']); ?></span>
             </div>
           <?php endif; ?>

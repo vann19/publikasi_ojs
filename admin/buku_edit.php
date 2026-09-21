@@ -43,7 +43,14 @@ if (!$book) {
                 <button onclick="toggleSidebar()" class="md:hidden text-gray-600 hover:text-gray-900">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
-                <h1 class="text-xl font-bold text-gray-900">Edit Buku</h1>
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <a href="/admin/buku.php" class="flex items-center gap-1.5 hover:text-primary-600 transition-colors">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                        Kelola Buku
+                    </a>
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    <span class="font-semibold text-gray-900">Edit Buku</span>
+                </div>
             </div>
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center">
@@ -73,7 +80,16 @@ if (!$book) {
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-                                <input type="text" name="category" value="<?php echo htmlspecialchars($book['category'] ?? ''); ?>" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                                <select name="category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500">
+                                    <option value="">-- Pilih Kategori --</option>
+                                    <?php
+                                    $kategoriOptions = ['Buku Ajar','Buku Referensi','Monograf','Bunga Rampai','Cerpen','Puisi','Novel','Sejarah','Pendidikan','Teknologi','Kesehatan','Hukum','Ekonomi','Sosial','Lainnya'];
+                                    foreach ($kategoriOptions as $opt):
+                                        $selected = (strtolower(trim($book['category'] ?? '')) === strtolower($opt)) ? 'selected' : '';
+                                    ?>
+                                        <option value="<?php echo htmlspecialchars($opt); ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($opt); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
                         <div class="mb-4">

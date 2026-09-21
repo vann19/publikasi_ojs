@@ -26,7 +26,10 @@ $adminPage = 'seminar';
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
                 <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <a href="/admin/seminar.php" class="hover:text-primary-600 transition-colors">Kelola Seminar</a>
+                    <a href="/admin/seminar.php" class="flex items-center gap-1.5 hover:text-primary-600 transition-colors">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                        Kelola Seminar
+                    </a>
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     <span class="font-semibold text-gray-900">Tambah Seminar</span>
                 </div>

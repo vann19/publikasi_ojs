@@ -25,7 +25,7 @@ if ($q !== '') {
     $params['q'] = '%' . $q . '%';
 }
 if ($kategori !== '') {
-    $where[] = 'category = :kategori';
+    $where[] = 'LOWER(TRIM(category)) = LOWER(TRIM(:kategori))';
     $params['kategori'] = $kategori;
 }
 if ($tahun !== '') {
@@ -229,12 +229,12 @@ function bukuQueryUrl(array $override = []) {
             $pesanWA    = "Halo, saya ingin memesan buku \"{$buku['title']}\" ({$hargaText}).";
             $linkWA     = 'https://wa.me/' . $whatsappNomor . '?text=' . urlencode($pesanWA);
           ?>
-          <div class="h-full flex flex-col rounded-xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow bg-white">
+          <div class="h-full flex flex-col rounded-xl border border-gray-100 overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 bg-white group">
 
             <!-- Cover: tinggi tetap, konsisten di semua card -->
             <a href="detail.php?id=<?php echo $buku['id']; ?>" class="block aspect-[3/4] bg-gray-100 overflow-hidden">
               <?php if ($buku['image']): ?>
-                <img src="<?php echo htmlspecialchars($buku['image']); ?>" alt="<?php echo htmlspecialchars($buku['title']); ?>" class="w-full h-full object-cover">
+                <img src="<?php echo htmlspecialchars($buku['image']); ?>" alt="<?php echo htmlspecialchars($buku['title']); ?>" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
               <?php else: ?>
                 <div class="w-full h-full flex items-center justify-center p-4">
                   <span class="text-gray-400 text-xs font-semibold text-center leading-snug"><?php echo htmlspecialchars($buku['title']); ?></span>
