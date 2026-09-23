@@ -28,6 +28,123 @@ $journals = $stmt->fetchAll();
     .toggle-checkbox:checked + .toggle-label {
       background-color: #059669;
     }
+
+    /* Upload Cover Modal */
+    .cover-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .cover-modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .cover-modal {
+      background: white;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 480px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      transform: scale(0.95) translateY(10px);
+      transition: transform 0.3s ease;
+      overflow: hidden;
+    }
+    .cover-modal-overlay.active .cover-modal {
+      transform: scale(1) translateY(0);
+    }
+    .cover-dropzone {
+      border: 2px dashed #d1d5db;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #f9fafb;
+    }
+    .cover-dropzone:hover,
+    .cover-dropzone.dragover {
+      border-color: #6366f1;
+      background: #eef2ff;
+    }
+    .cover-dropzone.has-file {
+      border-color: #059669;
+      background: #ecfdf5;
+    }
+    .cover-preview-img {
+      max-width: 200px;
+      max-height: 260px;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin: 0 auto;
+      display: block;
+    }
+    .upload-progress-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: #e5e7eb;
+      overflow: hidden;
+      display: none;
+    }
+    .upload-progress-bar .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+    .upload-progress-bar.active {
+      display: block;
+    }
+
+    /* Cover action button */
+    .cover-cell {
+      position: relative;
+    }
+    .cover-cell .cover-upload-btn {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 6px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      cursor: pointer;
+    }
+    .cover-cell:hover .cover-upload-btn {
+      opacity: 1;
+    }
+        .cover-upload-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+            padding: 0.35rem 0.5rem;
+            border: 1px solid #c7d2fe;
+            border-radius: 0.375rem;
+            color: #4338ca;
+            background: #eef2ff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            line-height: 1rem;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .cover-upload-action:hover {
+            color: #3730a3;
+            background: #e0e7ff;
+        }
   </style>
 </head>
 <body class="bg-gray-50 font-sans text-gray-800 antialiased">
@@ -88,13 +205,26 @@ $journals = $stmt->fetchAll();
                                 </tr>
                                 <?php else: ?>
                                     <?php foreach($journals as $j): ?>
-                                    <tr class="hover:bg-gray-50 transition-colors">
+                                    <tr class="hover:bg-gray-50 transition-colors" id="row-jurnal-<?php echo $j['id']; ?>">
                                         <td class="p-4 align-middle">
-                                            <?php if(!empty($j['image'])): ?>
-                                                <img src="<?php echo htmlspecialchars($j['image']); ?>" alt="Cover" class="w-16 h-20 object-cover rounded shadow-sm border border-gray-200">
-                                            <?php else: ?>
-                                                <div class="w-16 h-20 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs text-center border border-gray-300">No Cover</div>
-                                            <?php endif; ?>
+                                            <div class="cover-cell inline-block relative" style="width:64px;height:80px;">
+                                                <?php if(!empty($j['image'])): ?>
+                                                    <img src="<?php echo htmlspecialchars($j['image']); ?>" alt="Cover" class="w-16 h-20 object-cover rounded shadow-sm border border-gray-200" id="cover-img-<?php echo $j['id']; ?>">
+                                                <?php else: ?>
+                                                    <div class="w-16 h-20 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs text-center border border-gray-300" id="cover-img-<?php echo $j['id']; ?>">No Cover</div>
+                                                <?php endif; ?>
+                                                <div class="cover-upload-btn" onclick="openCoverModal(<?php echo $j['id']; ?>, '<?php echo addslashes(htmlspecialchars($j['title'])); ?>')" title="Upload Cover">
+                                                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                </div>
+                                                <button type="button" class="cover-upload-action" onclick="openCoverModal(<?php echo $j['id']; ?>, '<?php echo addslashes(htmlspecialchars($j['title'])); ?>')">
+                                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                                    </svg>
+                                                    <?php echo !empty($j['image']) ? 'Ganti cover' : 'Tambah cover'; ?>
+                                                </button>
+                                            </div>
                                         </td>
                                         <td class="p-4 align-middle">
                                             <p class="font-bold text-gray-900 text-sm mb-1"><?php echo htmlspecialchars($j['title']); ?></p>
@@ -123,7 +253,234 @@ $journals = $stmt->fetchAll();
     </div>
 </div>
 
+<!-- Cover Upload Modal -->
+<div class="cover-modal-overlay" id="cover-modal-overlay" onclick="closeCoverModal(event)">
+    <div class="cover-modal" onclick="event.stopPropagation()">
+        <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-bold text-gray-900">Upload Cover Jurnal</h3>
+                <p class="text-sm text-gray-500 mt-1" id="modal-jurnal-title"></p>
+            </div>
+            <button onclick="closeCoverModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+
+        <div class="p-6">
+            <!-- Dropzone -->
+            <div class="cover-dropzone" id="cover-dropzone" onclick="document.getElementById('cover-file-input').click()">
+                <div id="dropzone-content">
+                    <svg class="w-10 h-10 text-gray-400 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                    </svg>
+                    <p class="text-sm font-semibold text-gray-700">Klik atau seret foto cover ke sini</p>
+                    <p class="text-xs text-gray-400 mt-1">JPG, PNG, WebP, GIF, BMP • Maks 5 MB</p>
+                    <p class="text-xs text-emerald-600 font-medium mt-2">📦 Otomatis dikonversi ke format WebP</p>
+                </div>
+                <div id="dropzone-preview" class="hidden">
+                    <img id="cover-preview-image" class="cover-preview-img" alt="Preview">
+                    <p class="text-xs text-gray-500 mt-3" id="cover-file-info"></p>
+                    <button type="button" onclick="event.stopPropagation(); resetDropzone()" class="mt-2 text-xs text-red-500 hover:text-red-700 font-medium inline-flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        Ganti foto
+                    </button>
+                </div>
+            </div>
+            <input type="file" id="cover-file-input" class="hidden" accept="image/jpeg,image/png,image/webp,image/gif,image/bmp">
+
+            <!-- Progress Bar -->
+            <div class="upload-progress-bar mt-4" id="upload-progress">
+                <div class="bar" id="upload-progress-bar"></div>
+            </div>
+
+            <!-- Status Message -->
+            <div id="upload-status" class="hidden mt-3 text-sm rounded-lg p-3"></div>
+        </div>
+
+        <div class="p-6 border-t border-gray-100 flex justify-end gap-3">
+            <button type="button" onclick="closeCoverModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Batal</button>
+            <button type="button" id="btn-upload-cover" onclick="uploadCover()" disabled class="px-5 py-2 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed rounded-lg transition-colors inline-flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                Upload & Konversi WebP
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
+// ===== Cover Upload Variables =====
+let currentJurnalId = null;
+let selectedFile = null;
+
+// ===== Cover Modal Functions =====
+function openCoverModal(id, title) {
+    currentJurnalId = id;
+    document.getElementById('modal-jurnal-title').textContent = title;
+    resetDropzone();
+    document.getElementById('upload-status').classList.add('hidden');
+    document.getElementById('cover-modal-overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCoverModal(event) {
+    if (event && event.target !== document.getElementById('cover-modal-overlay')) return;
+    document.getElementById('cover-modal-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+    currentJurnalId = null;
+    selectedFile = null;
+}
+
+function resetDropzone() {
+    selectedFile = null;
+    document.getElementById('cover-file-input').value = '';
+    document.getElementById('dropzone-content').classList.remove('hidden');
+    document.getElementById('dropzone-preview').classList.add('hidden');
+    document.getElementById('cover-dropzone').classList.remove('has-file');
+    document.getElementById('btn-upload-cover').disabled = true;
+    document.getElementById('upload-progress').classList.remove('active');
+    document.getElementById('upload-progress-bar').style.width = '0%';
+}
+
+function handleFileSelected(file) {
+    if (!file) return;
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/bmp'];
+    if (!allowedTypes.includes(file.type)) {
+        resetDropzone();
+        showUploadStatus('error', 'Format file tidak didukung. Gunakan JPG, PNG, WebP, GIF, atau BMP.');
+        return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        resetDropzone();
+        showUploadStatus('error', 'Ukuran file maksimal 5 MB.');
+        return;
+    }
+
+    selectedFile = file;
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('cover-preview-image').src = e.target.result;
+        document.getElementById('cover-file-info').textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        document.getElementById('dropzone-content').classList.add('hidden');
+        document.getElementById('dropzone-preview').classList.remove('hidden');
+        document.getElementById('cover-dropzone').classList.add('has-file');
+        document.getElementById('btn-upload-cover').disabled = false;
+        document.getElementById('upload-status').classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+// File input change handler
+document.getElementById('cover-file-input').addEventListener('change', function(e) {
+    handleFileSelected(e.target.files[0]);
+});
+
+// Drag & drop handlers
+const dropzone = document.getElementById('cover-dropzone');
+dropzone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    this.classList.add('dragover');
+});
+dropzone.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    this.classList.remove('dragover');
+});
+dropzone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) handleFileSelected(file);
+});
+
+function showUploadStatus(type, message) {
+    const statusEl = document.getElementById('upload-status');
+    statusEl.classList.remove('hidden');
+    if (type === 'success') {
+        statusEl.className = 'mt-3 text-sm rounded-lg p-3 bg-emerald-50 text-emerald-700 border border-emerald-200';
+    } else {
+        statusEl.className = 'mt-3 text-sm rounded-lg p-3 bg-red-50 text-red-700 border border-red-200';
+    }
+    statusEl.textContent = message;
+}
+
+async function uploadCover() {
+    if (!selectedFile || !currentJurnalId) return;
+
+    const btn = document.getElementById('btn-upload-cover');
+    const progressContainer = document.getElementById('upload-progress');
+    const progressBar = document.getElementById('upload-progress-bar');
+
+    btn.disabled = true;
+    btn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Mengupload...`;
+    progressContainer.classList.add('active');
+
+    const formData = new FormData();
+    formData.append('id', currentJurnalId);
+    formData.append('cover', selectedFile);
+
+    try {
+        const xhr = new XMLHttpRequest();
+
+        // Progress tracking
+        xhr.upload.addEventListener('progress', function(e) {
+            if (e.lengthComputable) {
+                const percent = Math.round((e.loaded / e.total) * 100);
+                progressBar.style.width = percent + '%';
+            }
+        });
+
+        const result = await new Promise((resolve, reject) => {
+            xhr.onload = function() {
+                try {
+                    resolve(JSON.parse(xhr.responseText));
+                } catch(e) {
+                    reject(new Error('Response bukan JSON'));
+                }
+            };
+            xhr.onerror = function() { reject(new Error('Gagal menghubungi server')); };
+            xhr.open('POST', '/api/upload-cover-jurnal.php');
+            xhr.send(formData);
+        });
+
+        if (result.status === 'success') {
+            showUploadStatus('success', result.message);
+            progressBar.style.width = '100%';
+
+            // Update the cover image in the table row
+            const coverCell = document.getElementById('cover-img-' + currentJurnalId);
+            if (coverCell) {
+                if (coverCell.tagName === 'IMG') {
+                    coverCell.src = result.image + '?t=' + Date.now();
+                } else {
+                    // Replace the placeholder div with an img
+                    const img = document.createElement('img');
+                    img.src = result.image + '?t=' + Date.now();
+                    img.alt = 'Cover';
+                    img.className = 'w-16 h-20 object-cover rounded shadow-sm border border-gray-200';
+                    img.id = 'cover-img-' + currentJurnalId;
+                    coverCell.parentNode.replaceChild(img, coverCell);
+                }
+            }
+
+            // Close modal after delay
+            setTimeout(() => closeCoverModal(), 1500);
+        } else {
+            showUploadStatus('error', result.message);
+        }
+    } catch (error) {
+        showUploadStatus('error', error.message || 'Terjadi kesalahan saat upload.');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg> Upload & Konversi WebP`;
+    }
+}
+
+// ===== Existing Functions =====
 async function scrapeData() {
     const btn = document.getElementById('btn-scrape');
     const alertBox = document.getElementById('jurnal-alert');
