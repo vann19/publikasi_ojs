@@ -1,10 +1,38 @@
+<?php
+// Default SEO tags jika tidak di-set dari halaman masing-masing
+$seoTitle = $seoTitle ?? 'Nawa Edukasi | Penerbitan Buku, Jurnal Ilmiah & Layanan HKI';
+$seoDesc  = $seoDesc ?? 'PT Nawa Edukasi Nusantara - penerbitan buku, layanan HKI, dan publikasi jurnal ilmiah terpercaya di Indonesia.';
+$seoImage = $seoImage ?? 'https://nawaedukasi.org/assets/img/logo.png';
+$seoUrl   = $seoUrl ?? 'https://nawaedukasi.org' . $_SERVER['REQUEST_URI'];
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nawa Edukasi | Penerbitan Buku, Jurnal Ilmiah & Layanan HKI</title>
-  <meta name="description" content="PT Nawa Edukasi Nusantara - penerbitan buku, layanan HKI, dan publikasi jurnal ilmiah terpercaya di Indonesia.">
+  
+  <!-- Basic SEO -->
+  <title><?php echo htmlspecialchars($seoTitle); ?></title>
+  <meta name="description" content="<?php echo htmlspecialchars($seoDesc); ?>">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/img/logo.png">
+  <link rel="apple-touch-icon" href="/assets/img/logo.png">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="<?php echo htmlspecialchars($seoUrl); ?>">
+  <meta property="og:title" content="<?php echo htmlspecialchars($seoTitle); ?>">
+  <meta property="og:description" content="<?php echo htmlspecialchars($seoDesc); ?>">
+  <meta property="og:image" content="<?php echo htmlspecialchars($seoImage); ?>">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="<?php echo htmlspecialchars($seoUrl); ?>">
+  <meta property="twitter:title" content="<?php echo htmlspecialchars($seoTitle); ?>">
+  <meta property="twitter:description" content="<?php echo htmlspecialchars($seoDesc); ?>">
+  <meta property="twitter:image" content="<?php echo htmlspecialchars($seoImage); ?>">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/output.css">

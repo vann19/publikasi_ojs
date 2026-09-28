@@ -1,8 +1,6 @@
 <?php
 $activePage = 'buku';
-include '../includes/header.php';
 require_once '../includes/db.php';
-
 $pdo = getDB();
 
 $slug = isset($_GET['slug']) ? trim($_GET['slug']) : '';
@@ -28,6 +26,15 @@ if (!$buku) {
     header('Location: /books/');
     exit;
 }
+
+// Setup SEO variables
+$seoTitle = htmlspecialchars($buku['title']) . " | Nawa Edukasi";
+$seoDesc = mb_strimwidth(strip_tags($buku['description'] ?: 'Beli buku ' . $buku['title'] . ' karangan ' . $buku['author'] . ' di Nawa Edukasi.'), 0, 150, "...");
+$seoImage = $buku['image'] ? 'https://nawaedukasi.org' . $buku['image'] : 'https://nawaedukasi.org/assets/img/logo.png';
+$seoUrl = 'https://nawaedukasi.org/books/' . urlencode($buku['slug']) . '/';
+
+include '../includes/header.php';
+
 
 $whatsappNomor = '6281916200962';
 $hargaAngka    = $buku['harga'];
