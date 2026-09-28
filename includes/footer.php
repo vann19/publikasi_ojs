@@ -34,7 +34,7 @@
           <ul class="space-y-2 text-sm">
             <li><a href="/" class="hover:text-white transition-colors">Beranda</a></li>
             <li><a href="/tentang-kami" class="hover:text-white transition-colors">Tentang Kami</a></li>
-            <li><a href="/buku" class="hover:text-white transition-colors">Buku</a></li>
+            <li><a href="/books" class="hover:text-white transition-colors">Buku</a></li>
             <li><a href="/jurnal" class="hover:text-white transition-colors">Jurnal (OJS)</a></li>
             <li><a href="/seminar" class="hover:text-white transition-colors">Seminar</a></li>
           </ul>

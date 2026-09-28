@@ -1,0 +1,10 @@
+RewriteEngine On
+Options -MultiViews
+
+# Redirect /buku to /books
+RewriteRule ^buku/(.*)$ books/$1 [R=301,L]
+
+# Rewrite books/slug to books/detail.php?slug=slug
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^books/([^/]+)/?$ books/detail.php?slug=$1 [L,QSA]

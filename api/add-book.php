@@ -60,11 +60,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    function generateSlug($string) {
+        $s = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $string)));
+        return trim($s, '-');
+    }
+    
     $pdo = getDB();
-    $stmt = $pdo->prepare("INSERT INTO books (title, author, category, harga, publisher, published_date, isbn, pages, country, language, description, image) VALUES (:title, :author, :category, :harga, :publisher, :published_date, :isbn, :pages, :country, :language, :description, :image)");
+    $slug = generateSlug($title);
+    
+    // Check if slug exists
+    $stmtSlug = $pdo->prepare("SELECT COUNT(*) FROM books WHERE slug = ?");
+    $stmtSlug->execute([$slug]);
+    if ($stmtSlug->fetchColumn() > 0) {
+        $slug .= '-' . time();
+    }
+
+    $stmt = $pdo->prepare("INSERT INTO books (title, slug, author, category, harga, publisher, published_date, isbn, pages, country, language, description, image) VALUES (:title, :slug, :author, :category, :harga, :publisher, :published_date, :isbn, :pages, :country, :language, :description, :image)");
 
     $success = $stmt->execute([
         'title' => $title,
+        'slug' => $slug,
         'author' => $author,
         'category' => $category,
         'harga' => $harga,

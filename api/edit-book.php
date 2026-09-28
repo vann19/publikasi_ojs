@@ -72,11 +72,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $stmt = $pdo->prepare("UPDATE books SET title = :title, author = :author, category = :category, harga = :harga, publisher = :publisher, published_date = :published_date, isbn = :isbn, pages = :pages, country = :country, language = :language, description = :description, image = :image WHERE id = :id");
+    function generateSlug($string) {
+        $s = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $string)));
+        return trim($s, '-');
+    }
+    
+    $slug = generateSlug($title);
+    $stmtSlug = $pdo->prepare("SELECT COUNT(*) FROM books WHERE slug = ? AND id != ?");
+    $stmtSlug->execute([$slug, $id]);
+    if ($stmtSlug->fetchColumn() > 0) {
+        $slug .= '-' . $id;
+    }
+
+    $stmt = $pdo->prepare("UPDATE books SET title = :title, slug = :slug, author = :author, category = :category, harga = :harga, publisher = :publisher, published_date = :published_date, isbn = :isbn, pages = :pages, country = :country, language = :language, description = :description, image = :image WHERE id = :id");
 
     $success = $stmt->execute([
         'id' => $id,
         'title' => $title,
+        'slug' => $slug,
         'author' => $author,
         'category' => $category,
         'harga' => $harga,

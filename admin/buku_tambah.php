@@ -180,7 +180,7 @@ document.getElementById('form-add-book').addEventListener('submit', async (e) =>
         if (data.status === 'success') {
             e.target.reset();
             document.getElementById('book-preview').classList.add('hidden');
-            window.location.href = '/buku/'; // Redirect per user request
+            window.location.href = '/books/'; // Redirect per user request
         }
     } catch (error) {
         alertBox.className = 'mb-4 p-4 text-sm rounded-lg bg-red-50 text-red-800 block';

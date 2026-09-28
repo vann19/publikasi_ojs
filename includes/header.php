@@ -43,7 +43,7 @@
           <?php $navLink('beranda', 'Beranda', '/'); ?>
           <?php $navLink('tentang-kami', 'Tentang Kami', '/tentang-kami.php'); ?>
 
-          <?php $navLink('buku', 'Buku', '/buku/'); ?>
+          <?php $navLink('buku', 'Buku', '/books/'); ?>
 
           <?php $navLink('jurnal', 'Jurnal (OJS)', '/jurnal.php'); ?>
           <?php $navLink('seminar', 'Seminar', '/seminar.php'); ?>
@@ -73,7 +73,7 @@
       <?php $navLinkMobile('beranda', 'Beranda', '/'); ?>
       <?php $navLinkMobile('tentang-kami', 'Tentang Kami', '/tentang-kami.php'); ?>
 
-      <?php $navLinkMobile('buku', 'Buku', '/buku/'); ?>
+      <?php $navLinkMobile('buku', 'Buku', '/books/'); ?>
 
       <?php $navLinkMobile('jurnal', 'Jurnal (OJS)', '/jurnal.php'); ?>
       <?php $navLinkMobile('seminar', 'Seminar', '/seminar.php'); ?>

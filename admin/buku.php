@@ -106,7 +106,7 @@ async function deleteBook(id) {
         const res = await fetch('/api/delete-book.php', { method: 'POST', body: formData });
         const data = await res.json();
         if (data.status === 'success') {
-            window.location.href = '/buku/'; // Redirect per user request
+            window.location.href = '/books/'; // Redirect per user request
         } else {
             alert(data.message || 'Gagal menghapus buku');
         }

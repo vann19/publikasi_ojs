@@ -5,19 +5,27 @@ require_once '../includes/db.php';
 
 $pdo = getDB();
 
+$slug = isset($_GET['slug']) ? trim($_GET['slug']) : '';
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
-if ($id <= 0) {
-    header('Location: /buku/');
+if (empty($slug) && $id <= 0) {
+    header('Location: /books/');
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT * FROM books WHERE id = :id");
-$stmt->execute(['id' => $id]);
+if (!empty($slug)) {
+    $stmt = $pdo->prepare("SELECT * FROM books WHERE slug = :slug");
+    $stmt->execute(['slug' => $slug]);
+} else {
+    $stmt = $pdo->prepare("SELECT * FROM books WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+}
+
 $buku = $stmt->fetch();
+$id = $buku['id'] ?? 0;
 
 if (!$buku) {
-    header('Location: /buku/');
+    header('Location: /books/');
     exit;
 }
 
@@ -42,7 +50,7 @@ if (!empty($buku['category'])) {
       <p class="text-sm text-gray-500">
         <a href="/" class="hover:text-primary-700 transition-colors">Beranda</a>
         <span class="mx-2 text-gray-300">/</span>
-        <a href="/buku/" class="hover:text-primary-700 transition-colors">Katalog Buku</a>
+        <a href="/books/" class="hover:text-primary-700 transition-colors">Katalog Buku</a>
         <span class="mx-2 text-gray-300">/</span>
         <span class="text-primary-700 font-medium line-clamp-1"><?php echo htmlspecialchars($buku['title']); ?></span>
       </p>
@@ -88,7 +96,7 @@ if (!empty($buku['category'])) {
               Pesan via WhatsApp
             </a>
 
-            <a href="/buku/" class="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl border border-primary-200 text-primary-700 font-semibold hover:bg-primary-50 transition-colors text-sm">
+            <a href="/books/" class="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl border border-primary-200 text-primary-700 font-semibold hover:bg-primary-50 transition-colors text-sm">
               &larr; Kembali ke Katalog
             </a>
           </div>
@@ -244,7 +252,7 @@ if (!empty($buku['category'])) {
             </svg>
             Pesan via WhatsApp
           </a>
-          <a href="/buku/" class="flex-1 flex items-center justify-center px-5 py-3 rounded-xl border border-primary-200 text-primary-700 font-semibold hover:bg-primary-50 transition-colors text-sm">
+          <a href="/books/" class="flex-1 flex items-center justify-center px-5 py-3 rounded-xl border border-primary-200 text-primary-700 font-semibold hover:bg-primary-50 transition-colors text-sm">
             &larr; Kembali
           </a>
         </div>
@@ -265,7 +273,7 @@ if (!empty($buku['category'])) {
             $waRek   = 'https://wa.me/' . $whatsappNomor . '?text=' . urlencode("Halo, saya ingin memesan buku \"{$rek['title']}\" ({$hRek}).");
           ?>
           <div class="h-full flex flex-col rounded-xl border border-gray-100 overflow-hidden hover:shadow-sm transition-shadow bg-white">
-            <a href="/buku/detail.php?id=<?php echo $rek['id']; ?>" class="block aspect-[3/4] bg-gray-100 overflow-hidden">
+            <a href="/books/<?php echo htmlspecialchars($rek['slug']); ?>/" class="block aspect-[3/4] bg-gray-100 overflow-hidden">
               <?php if ($rek['image']): ?>
                 <img src="<?php echo htmlspecialchars($rek['image']); ?>" alt="<?php echo htmlspecialchars($rek['title']); ?>" class="w-full h-full object-cover">
               <?php else: ?>
@@ -279,7 +287,7 @@ if (!empty($buku['category'])) {
               <p class="text-[11px] text-gray-500 mt-1 line-clamp-1"><?php echo htmlspecialchars($rek['author']); ?></p>
               <p class="text-xs font-bold text-primary-700 mt-2"><?php echo $hRek; ?></p>
               <div class="mt-auto pt-3 space-y-2">
-                <a href="/buku/detail.php?id=<?php echo $rek['id']; ?>" class="block text-center text-[11px] font-semibold text-primary-700 border border-primary-200 rounded-lg py-1.5 hover:bg-primary-50 transition-colors">
+                <a href="/books/<?php echo htmlspecialchars($rek['slug']); ?>/" class="block text-center text-[11px] font-semibold text-primary-700 border border-primary-200 rounded-lg py-1.5 hover:bg-primary-50 transition-colors">
                   Detail Buku
                 </a>
                 <a href="<?php echo htmlspecialchars($waRek); ?>" target="_blank" rel="noopener"

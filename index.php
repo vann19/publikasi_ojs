@@ -38,7 +38,7 @@ $jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, l
           layanan Hak Kekayaan Intelektual, pengelolaan jurnal ilmiah, seminar, dan layanan akademik lainnya.
         </p>
         <div class="mt-8 flex flex-wrap gap-4">
-          <a href="/buku/" class="inline-flex items-center px-6 py-3 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors">
+          <a href="/books/" class="inline-flex items-center px-6 py-3 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors">
             Jelajahi Buku
           </a>
           <a href="/layanan.php" class="inline-flex items-center px-6 py-3 rounded-lg border border-white/60 text-white font-semibold hover:bg-white/10 transition-colors">
@@ -96,7 +96,7 @@ $jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, l
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
     <div class="flex items-end justify-between mb-6">
       <h2 class="text-2xl font-bold text-gray-900">Katalog Buku Terbaru</h2>
-      <a href="/buku/" class="text-sm font-medium text-primary-600 hover:text-primary-700">Lihat Semua Buku &rarr;</a>
+      <a href="/books/" class="text-sm font-medium text-primary-600 hover:text-primary-700">Lihat Semua Buku &rarr;</a>
     </div>
 
     <?php
@@ -115,7 +115,7 @@ $jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, l
           <div class="h-full flex flex-col rounded-xl border border-gray-100 overflow-hidden shadow-md hover:shadow-lg transition-shadow bg-white">
 
             <!-- Cover -->
-            <a href="/buku/detail.php?id=<?php echo $buku['id']; ?>" class="block aspect-[3/4] bg-gray-100 overflow-hidden">
+            <a href="/books/<?php echo htmlspecialchars($buku['slug']); ?>/" class="block aspect-[3/4] bg-gray-100 overflow-hidden">
               <?php if ($buku['image']): ?>
                 <img src="<?php echo htmlspecialchars($buku['image']); ?>" alt="<?php echo htmlspecialchars($buku['title']); ?>" class="w-full h-full object-cover">
               <?php else: ?>
@@ -146,7 +146,7 @@ $jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, l
 
               <!-- Tombol selalu di bawah -->
               <div class="mt-auto pt-3 space-y-2">
-                <a href="/buku/detail.php?id=<?php echo $buku['id']; ?>" class="block text-center text-[11px] font-semibold text-primary-700 border border-primary-200 rounded-lg py-1.5 hover:bg-primary-50 transition-colors">
+                <a href="/books/<?php echo htmlspecialchars($buku['slug']); ?>/" class="block text-center text-[11px] font-semibold text-primary-700 border border-primary-200 rounded-lg py-1.5 hover:bg-primary-50 transition-colors">
                   Detail Buku
                 </a>
                 <a href="<?php echo htmlspecialchars($linkWA); ?>" target="_blank" rel="noopener"

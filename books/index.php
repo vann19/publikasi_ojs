@@ -232,7 +232,7 @@ function bukuQueryUrl(array $override = []) {
           <div class="h-full flex flex-col rounded-xl border border-gray-100 overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 bg-white group">
 
             <!-- Cover: tinggi tetap, konsisten di semua card -->
-            <a href="detail.php?id=<?php echo $buku['id']; ?>" class="block aspect-[3/4] bg-gray-100 overflow-hidden">
+            <a href="/books/<?php echo htmlspecialchars($buku['slug']); ?>/" class="block aspect-[3/4] bg-gray-100 overflow-hidden">
               <?php if ($buku['image']): ?>
                 <img src="<?php echo htmlspecialchars($buku['image']); ?>" alt="<?php echo htmlspecialchars($buku['title']); ?>" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
               <?php else: ?>
@@ -264,7 +264,7 @@ function bukuQueryUrl(array $override = []) {
 
               <!-- spacer: dorong tombol ke bawah supaya semua card sejajar -->
               <div class="mt-auto pt-3 space-y-2">
-                <a href="detail.php?id=<?php echo $buku['id']; ?>" class="block text-center text-xs font-semibold text-primary-700 border border-primary-200 rounded-lg py-2 hover:bg-primary-50 transition-colors">
+                <a href="/books/<?php echo htmlspecialchars($buku['slug']); ?>/" class="block text-center text-xs font-semibold text-primary-700 border border-primary-200 rounded-lg py-2 hover:bg-primary-50 transition-colors">
                   Detail Buku
                 </a>
                 <a href="<?php echo htmlspecialchars($linkWA); ?>" target="_blank" rel="noopener"
