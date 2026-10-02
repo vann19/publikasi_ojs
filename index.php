@@ -25,12 +25,15 @@ $jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, l
   <section class="relative overflow-hidden">
     <!-- Gambar latar -->
     <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('assets/img/background.png');"></div>
-    <!-- Gradien overlay biar teks tetap kebaca -->
+    <!-- Gradien overlay dengan shimmer animasi -->
     <div class="absolute inset-0 bg-gradient-to-r from-[#1E1B3A]/95 via-[#1E1B3A]/80 to-[#1E1B3A]/30"></div>
+    <div id="hero-shimmer" class="absolute inset-0 opacity-20"></div>
+    <!-- Canvas particles -->
+    <canvas id="hero-particles" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 lg:py-36">
       <div class="max-w-xl">
-        <h1 class="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
+        <h1 id="hero-title" class="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
           Penerbitan Berkualitas, Ilmu Berdaya, Masyarakat Bermakna.
         </h1>
         <p class="mt-5 text-gray-200 leading-relaxed max-w-md">
@@ -112,7 +115,7 @@ $jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, l
             $pesanWA    = "Halo, saya ingin memesan buku \"{$buku['title']}\" ({$hargaText}).";
             $linkWA     = 'https://wa.me/' . $whatsappNomor . '?text=' . urlencode($pesanWA);
           ?>
-          <div class="h-full flex flex-col rounded-xl border border-gray-100 overflow-hidden shadow-md hover:shadow-lg transition-shadow bg-white">
+          <div class="tilt-card h-full flex flex-col rounded-xl border border-gray-100 overflow-hidden shadow-md hover:shadow-lg transition-shadow bg-white">
 
             <!-- Cover -->
             <a href="/books/<?php echo htmlspecialchars($buku['slug']); ?>/" class="block aspect-[3/4] bg-gray-100 overflow-hidden">
@@ -131,7 +134,7 @@ $jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, l
                 <p class="text-[11px] font-semibold text-primary-600 uppercase tracking-wide mb-1 truncate"><?php echo htmlspecialchars($buku['category']); ?></p>
               <?php endif; ?>
 
-              <p class="text-xs font-semibold text-gray-900 leading-snug line-clamp-2 min-h-[2.5rem]"><?php echo htmlspecialchars($buku['title']); ?></p>
+              <p class="text-xs font-semibold text-gray-900 leading-snug line-clamp-4 min-h-[5rem]"><?php echo htmlspecialchars($buku['title']); ?></p>
 
               <p class="text-[11px] text-gray-500 mt-1 line-clamp-1"><?php echo htmlspecialchars($buku['author']); ?></p>
 
@@ -219,23 +222,23 @@ $jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, l
     </div>
   </section>
 
-  <!-- Statistik (dummy) -->
-  <section class="border-y border-gray-100 bg-gray-50">
+  <!-- Statistik dengan Animated Counter -->
+  <section id="stats-section" class="border-y border-gray-100 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
       <div>
-        <p class="text-2xl font-bold text-primary-700">100+</p>
+        <p class="text-2xl font-bold text-primary-700"><span class="stat-counter" data-target="100">0</span>+</p>
         <p class="text-sm text-gray-500 mt-1">Buku Terbit</p>
       </div>
       <div>
-        <p class="text-2xl font-bold text-primary-700">50+</p>
+        <p class="text-2xl font-bold text-primary-700"><span class="stat-counter" data-target="50">0</span>+</p>
         <p class="text-sm text-gray-500 mt-1">Jurnal Terbit</p>
       </div>
       <div>
-        <p class="text-2xl font-bold text-primary-700">200+</p>
+        <p class="text-2xl font-bold text-primary-700"><span class="stat-counter" data-target="200">0</span>+</p>
         <p class="text-sm text-gray-500 mt-1">Naskah HKI Terdaftar</p>
       </div>
       <div>
-        <p class="text-2xl font-bold text-primary-700">10+</p>
+        <p class="text-2xl font-bold text-primary-700"><span class="stat-counter" data-target="10">0</span>+</p>
         <p class="text-sm text-gray-500 mt-1">Tahun Pengalaman</p>
       </div>
     </div>
@@ -316,6 +319,156 @@ $jurnalTerbaru = $pdo->query("SELECT title AS judul, description AS deskripsi, l
       </div>
     </div>
   </section>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/6281916200962" target="_blank" rel="noopener"
+     id="wa-float"
+     aria-label="Chat WhatsApp"
+     class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-green-500 flex items-center justify-center shadow-lg hover:bg-green-600 transition-colors">
+    <span class="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" style="animation: waPing 1.5s cubic-bezier(0,0,0.2,1) infinite;"></span>
+    <svg class="w-7 h-7 text-white relative z-10" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2.25c-5.46 0-9.88 4.42-9.88 9.88 0 1.74.46 3.44 1.33 4.94L2 21.75l4.8-1.46a9.83 9.83 0 004.24.98h.01c5.46 0 9.88-4.42 9.88-9.88 0-5.46-4.42-9.88-9.89-9.88Zm5.7 14.02c-.24.68-1.4 1.3-1.93 1.34-.5.05-.99.24-3.32-.7-2.8-1.14-4.6-3.98-4.75-4.16-.14-.19-1.14-1.52-1.14-2.9 0-1.37.72-2.05.98-2.33.26-.28.56-.35.75-.35h.53c.17 0 .4-.06.62.48.24.58.8 2 .87 2.14.07.14.12.31.02.5-.1.19-.15.31-.3.48-.15.17-.31.38-.44.51-.15.15-.3.3-.13.6.17.3.77 1.27 1.65 2.06 1.14 1.02 2.09 1.34 2.39 1.49.3.15.47.13.65-.08.17-.2.74-.86.94-1.16.2-.3.4-.25.66-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.13.07.75-.17 1.43Z"/></svg>
+  </a>
+
+  <!-- Scroll Progress Bar -->
+
+
+  <style>
+  /* Word Reveal */
+  #hero-title .word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: wordReveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes wordReveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* Hero shimmer */
+  @keyframes shimmerMove {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+  #hero-shimmer {
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%);
+    background-size: 200% 100%;
+    animation: shimmerMove 4s linear infinite;
+  }
+  /* WA ping */
+  @keyframes waPing {
+    75%, 100% { transform: scale(2); opacity: 0; }
+  }
+  /* 3D Tilt */
+  .tilt-card {
+    transform-style: preserve-3d;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    will-change: transform;
+  }
+  </style>
+
+  <script>
+  // 1. Word-by-word staggered reveal
+  (function() {
+    var title = document.getElementById('hero-title');
+    var text = title.textContent.trim();
+    var words = text.split(' ');
+    title.innerHTML = words.map(function(word, i) {
+      return '<span class="word" style="animation-delay:' + (i * 80) + 'ms">' + word + '</span>';
+    }).join(' ');
+  })();
+
+  // 2. Particles canvas di hero
+  (function() {
+    var canvas = document.getElementById('hero-particles');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var particles = [];
+    var NUM = 55;
+    function resize() {
+      canvas.width  = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    for (var i = 0; i < NUM; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.8 + 0.4,
+        dx: (Math.random() - 0.5) * 0.35,
+        dy: (Math.random() - 0.5) * 0.35,
+        alpha: Math.random() * 0.5 + 0.15
+      });
+    }
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(function(p) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(167,139,250,' + p.alpha + ')';
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.x < 0 || p.x > canvas.width)  p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  // 3. Animated counter saat section masuk viewport
+  (function() {
+    var done = false;
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+    function runCounters() {
+      if (done) return;
+      var section = document.getElementById('stats-section');
+      if (!section) return;
+      var rect = section.getBoundingClientRect();
+      if (rect.top > window.innerHeight) return;
+      done = true;
+      document.querySelectorAll('.stat-counter').forEach(function(el) {
+        var target = parseInt(el.getAttribute('data-target'), 10);
+        var start = 0;
+        var duration = 1800;
+        var startTime = null;
+        function step(ts) {
+          if (!startTime) startTime = ts;
+          var progress = Math.min((ts - startTime) / duration, 1);
+          el.textContent = Math.floor(easeOut(progress) * target);
+          if (progress < 1) requestAnimationFrame(step);
+          else el.textContent = target;
+        }
+        requestAnimationFrame(step);
+      });
+    }
+    window.addEventListener('scroll', runCounters, { passive: true });
+    runCounters();
+  })();
+
+  // 4. 3D Tilt pada card buku
+  (function() {
+    document.querySelectorAll('.tilt-card').forEach(function(card) {
+      card.addEventListener('mousemove', function(e) {
+        var rect = card.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        var cx = rect.width / 2;
+        var cy = rect.height / 2;
+        var rotX = ((y - cy) / cy) * -8;
+        var rotY = ((x - cx) / cx) * 8;
+        card.style.transform = 'perspective(600px) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) scale(1.03)';
+        card.style.boxShadow = '0 20px 40px rgba(109,94,224,0.18)';
+      });
+      card.addEventListener('mouseleave', function() {
+        card.style.transform = '';
+        card.style.boxShadow = '';
+      });
+    });
+  })();
+
+
+  </script>
 
   <script>
   function submitComment(e) {

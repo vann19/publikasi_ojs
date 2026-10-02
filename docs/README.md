@@ -42,7 +42,7 @@ npm run build
 ### 2. Jalankan PHP Dev Server
 
 ```bash
-php -S localhost:8000
+php -S localhost:8000 router.php
 ```
 
 Buka browser dan akses:
@@ -68,7 +68,7 @@ npm run watch
 
 ```bash
 cd "/home/vanzer/Documents/PROJECT CLIENT/ojs_publikasi"
-php -S localhost:8000
+php -S localhost:8000 router.php
 ```
 
 Setiap kali ada perubahan pada file `.php` atau `.js`, Tailwind akan otomatis rebuild CSS-nya.

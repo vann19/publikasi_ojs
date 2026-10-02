@@ -84,5 +84,22 @@
     });
 
   </script>
+
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Secara otomatis menambahkan efek fade-up ke semua section agar berlaku di semua halaman
+    document.querySelectorAll('section').forEach(function(section) {
+      if (!section.hasAttribute('data-aos')) {
+        section.setAttribute('data-aos', 'fade-up');
+      }
+    });
+
+    AOS.init({
+      once: true, // Animasi hanya berjalan sekali saat di-scroll
+      offset: 100, // Jarak trigger animasi dari bawah viewport
+      duration: 800, // Durasi animasi dalam milidetik
+    });
+  </script>
 </body>
 </html>

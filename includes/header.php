@@ -36,6 +36,9 @@ $seoUrl   = $seoUrl ?? 'https://nawaedukasi.org' . $_SERVER['REQUEST_URI'];
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/output.css">
+  
+  <!-- AOS CSS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body class="bg-white font-sans text-gray-800 antialiased">
 

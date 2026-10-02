@@ -19,11 +19,11 @@ include 'includes/header.php';
     </div>
   </section>
 
-  <!-- Info + Form -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid lg:grid-cols-5 gap-10">
+  <!-- Info Kontak -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid lg:grid-cols-2 gap-10">
 
     <!-- Info kontak -->
-    <div class="lg:col-span-2 space-y-6">
+    <div class="space-y-6">
 
       <div class="rounded-2xl border border-gray-100 shadow-md p-6 space-y-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
         <div class="flex gap-4">
@@ -63,67 +63,16 @@ include 'includes/header.php';
           </div>
         </div>
       </div>
-
-      <!-- Peta -->
-      <div class="rounded-2xl overflow-hidden border border-gray-100 h-64">
-        <iframe
-          src="https://www.google.com/maps?q=Jl.+Gua+Selarong+No.+54,+Ringinharjo,+Bantul,+DIY&output=embed"
-          class="w-full h-full border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          title="Lokasi PT Nawa Edukasi Nusantara"></iframe>
-      </div>
     </div>
 
-    <!-- Form -->
-    <div class="lg:col-span-3">
-      <div class="rounded-2xl border border-gray-100 shadow-md p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-        <h2 class="text-lg font-bold text-gray-900 mb-1">Kirim Pesan</h2>
-        <p class="text-sm text-gray-500 mb-6">Isi form di bawah ini, tim kami akan menghubungi Anda kembali.</p>
-
-        <form class="space-y-5">
-          <div class="grid sm:grid-cols-2 gap-5">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Lengkap</label>
-              <input type="text" name="nama" placeholder="Masukkan nama Anda"
-                     class="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-200">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">Nomor HP / WhatsApp</label>
-              <input type="text" name="hp" placeholder="08xx-xxxx-xxxx"
-                     class="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-200">
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
-            <input type="email" name="email" placeholder="nama@email.com"
-                   class="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-200">
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Subjek</label>
-            <select name="subjek" class="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-200">
-              <option>Publikasi Jurnal</option>
-              <option>Penerbit Buku</option>
-              <option>Hak Kekayaan Intelektual (HKI)</option>
-              <option>Pembuatan OJS</option>
-              <option>Pendampingan Artikel Ilmiah</option>
-              <option>Lainnya</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Pesan</label>
-            <textarea name="pesan" rows="5" placeholder="Tuliskan pertanyaan atau kebutuhan Anda..."
-                      class="w-full text-sm border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-200"></textarea>
-          </div>
-
-          <button type="submit"
-                  class="inline-flex items-center px-6 py-3 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors">
-            Kirim Pesan
-          </button>
-        </form>
-      </div>
+    <!-- Peta -->
+    <div class="rounded-2xl overflow-hidden border border-gray-100 h-80">
+      <iframe
+        src="https://www.google.com/maps?q=Jl.+Gua+Selarong+No.+54,+Ringinharjo,+Bantul,+DIY&output=embed"
+        class="w-full h-full border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        title="Lokasi PT Nawa Edukasi Nusantara"></iframe>
     </div>
+
   </section>
 
 <?php include 'includes/footer.php'; ?>
