@@ -128,67 +128,101 @@ function bukuQueryUrl(array $override = []) {
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid lg:grid-cols-4 gap-8">
 
     <!-- Sidebar -->
-    <aside class="lg:col-span-1 space-y-6">
+    <aside class="lg:col-span-1 space-y-4">
+      
+      <!-- Tombol Toggle Sidebar (Mobile & Desktop) -->
+      <button type="button" id="toggle-sidebar-btn" onclick="toggleFullSidebar()"
+              class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 border-primary-600 text-primary-700 font-semibold text-sm hover:bg-primary-50 transition-colors mb-4">
+        <svg id="filter-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+        </svg>
+        <span id="toggle-text">Tampilkan Filter & Kategori</span>
+      </button>
+
+      <!-- Container Sidebar yang bisa di-toggle -->
+      <div id="sidebar-container" class="space-y-4" style="display: none;">
 
       <!-- Kategori -->
-      <div class="rounded-xl border border-gray-100 p-5">
-        <h3 class="font-semibold text-gray-900 mb-3">Kategori</h3>
-        <ul class="space-y-1">
-          <?php foreach ($kategoriList as $k): ?>
-            <li>
-              <a href="<?php echo htmlspecialchars(bukuQueryUrl(['kategori' => $k['value'], 'page' => null])); ?>"
-                 class="flex items-center justify-between px-3 py-2 rounded-lg text-sm <?php echo $kategori === $k['value'] ? 'bg-primary-50 text-primary-700 font-semibold' : 'text-gray-600 hover:bg-gray-50'; ?>">
-                <span><?php echo htmlspecialchars($k['nama']); ?></span>
-                <span class="text-xs text-gray-400"><?php echo $k['jumlah']; ?></span>
-              </a>
-            </li>
-          <?php endforeach; ?>
-        </ul>
+      <div class="rounded-xl border border-gray-100 overflow-hidden">
+        <button type="button" onclick="toggleSidebar('kategori-body', 'chevron-kategori')"
+                class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors">
+          <h3 class="font-semibold text-gray-900">Kategori</h3>
+          <svg id="chevron-kategori" class="w-4 h-4 text-gray-400 transition-transform duration-300 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div id="kategori-body" class="sidebar-collapsible">
+          <div class="px-5 pb-5">
+            <ul class="space-y-1">
+              <?php foreach ($kategoriList as $k): ?>
+                <li>
+                  <a href="<?php echo htmlspecialchars(bukuQueryUrl(['kategori' => $k['value'], 'page' => null])); ?>"
+                     class="flex items-center justify-between px-3 py-2 rounded-lg text-sm <?php echo $kategori === $k['value'] ? 'bg-primary-50 text-primary-700 font-semibold' : 'text-gray-600 hover:bg-gray-50'; ?>">
+                    <span><?php echo htmlspecialchars($k['nama']); ?></span>
+                    <span class="text-xs text-gray-400"><?php echo $k['jumlah']; ?></span>
+                  </a>
+                </li>
+              <?php endforeach; ?>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <!-- Filter Harga & Tahun -->
-      <div class="rounded-xl border border-gray-100 p-5">
-        <h3 class="font-semibold text-gray-900 mb-3">Filter</h3>
-
-        <p class="text-sm font-medium text-gray-700 mb-2">Harga</p>
-        <div class="space-y-2 text-sm text-gray-600 mb-5">
-          <label class="flex items-center gap-2">
-            <input type="radio" name="harga" value="" <?php echo $harga === '' ? 'checked' : ''; ?> class="accent-primary-600 w-4 h-4"> Semua Harga
-          </label>
-          <label class="flex items-center gap-2">
-            <input type="radio" name="harga" value="lt50" <?php echo $harga === 'lt50' ? 'checked' : ''; ?> class="accent-primary-600 w-4 h-4"> &lt; Rp50.000
-          </label>
-          <label class="flex items-center gap-2">
-            <input type="radio" name="harga" value="50-100" <?php echo $harga === '50-100' ? 'checked' : ''; ?> class="accent-primary-600 w-4 h-4"> Rp50.000 &ndash; Rp100.000
-          </label>
-          <label class="flex items-center gap-2">
-            <input type="radio" name="harga" value="100-150" <?php echo $harga === '100-150' ? 'checked' : ''; ?> class="accent-primary-600 w-4 h-4"> Rp100.000 &ndash; Rp150.000
-          </label>
-          <label class="flex items-center gap-2">
-            <input type="radio" name="harga" value="gt150" <?php echo $harga === 'gt150' ? 'checked' : ''; ?> class="accent-primary-600 w-4 h-4"> &gt; Rp150.000
-          </label>
-        </div>
-
-        <p class="text-sm font-medium text-gray-700 mb-2">Tahun Terbit</p>
-        <select name="tahun" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 mb-5">
-          <option value="">Pilih Tahun</option>
-          <?php foreach ($tahunList as $thn): ?>
-            <option value="<?php echo $thn; ?>" <?php echo $tahun == $thn ? 'selected' : ''; ?>><?php echo $thn; ?></option>
-          <?php endforeach; ?>
-        </select>
-
-        <?php if ($kategori !== ''): ?>
-          <input type="hidden" name="kategori" value="<?php echo htmlspecialchars($kategori); ?>">
-        <?php endif; ?>
-
-        <button type="submit" class="w-full text-sm font-semibold text-white bg-primary-600 rounded-lg py-2 hover:bg-primary-700 transition-colors mb-2">
-          Terapkan Filter
+      <div class="rounded-xl border border-gray-100 overflow-hidden">
+        <button type="button" onclick="toggleSidebar('filter-body', 'chevron-filter')"
+                class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors">
+          <h3 class="font-semibold text-gray-900">Filter</h3>
+          <svg id="chevron-filter" class="w-4 h-4 text-gray-400 transition-transform duration-300 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
         </button>
-        <a href="buku/index.php" class="block text-center w-full text-sm font-semibold text-primary-700 border border-primary-200 rounded-lg py-2 hover:bg-primary-50 transition-colors">
-          Reset Filter
-        </a>
+        <div id="filter-body" class="sidebar-collapsible">
+          <div class="px-5 pb-5">
+            <p class="text-sm font-medium text-gray-700 mb-2">Harga</p>
+            <div class="space-y-2 text-sm text-gray-600 mb-5">
+              <label class="flex items-center gap-2">
+                <input type="radio" name="harga" value="" <?php echo $harga === '' ? 'checked' : ''; ?> class="accent-primary-600 w-4 h-4"> Semua Harga
+              </label>
+              <label class="flex items-center gap-2">
+                <input type="radio" name="harga" value="lt50" <?php echo $harga === 'lt50' ? 'checked' : ''; ?> class="accent-primary-600 w-4 h-4"> &lt; Rp50.000
+              </label>
+              <label class="flex items-center gap-2">
+                <input type="radio" name="harga" value="50-100" <?php echo $harga === '50-100' ? 'checked' : ''; ?> class="accent-primary-600 w-4 h-4"> Rp50.000 &ndash; Rp100.000
+              </label>
+              <label class="flex items-center gap-2">
+                <input type="radio" name="harga" value="100-150" <?php echo $harga === '100-150' ? 'checked' : ''; ?> class="accent-primary-600 w-4 h-4"> Rp100.000 &ndash; Rp150.000
+              </label>
+              <label class="flex items-center gap-2">
+                <input type="radio" name="harga" value="gt150" <?php echo $harga === 'gt150' ? 'checked' : ''; ?> class="accent-primary-600 w-4 h-4"> &gt; Rp150.000
+              </label>
+            </div>
+
+            <p class="text-sm font-medium text-gray-700 mb-2">Tahun Terbit</p>
+            <select name="tahun" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 mb-5">
+              <option value="">Pilih Tahun</option>
+              <?php foreach ($tahunList as $thn): ?>
+                <option value="<?php echo $thn; ?>" <?php echo $tahun == $thn ? 'selected' : ''; ?>><?php echo $thn; ?></option>
+              <?php endforeach; ?>
+            </select>
+
+            <?php if ($kategori !== ''): ?>
+              <input type="hidden" name="kategori" value="<?php echo htmlspecialchars($kategori); ?>">
+            <?php endif; ?>
+
+            <button type="submit" class="w-full text-sm font-semibold text-white bg-primary-600 rounded-lg py-2 hover:bg-primary-700 transition-colors mb-2">
+              Terapkan Filter
+            </button>
+            <a href="buku/index.php" class="block text-center w-full text-sm font-semibold text-primary-700 border border-primary-200 rounded-lg py-2 hover:bg-primary-50 transition-colors">
+              Reset Filter
+            </a>
+          </div>
+        </div>
       </div>
+      
+      </div><!-- end sidebar-container -->
     </aside>
+
 
     <!-- Grid buku -->
     <div class="lg:col-span-3">
@@ -264,13 +298,13 @@ function bukuQueryUrl(array $override = []) {
 
               <!-- spacer: dorong tombol ke bawah supaya semua card sejajar -->
               <div class="mt-auto pt-3 space-y-2">
-                <a href="/books/<?php echo htmlspecialchars($buku['slug']); ?>/" class="block text-center text-xs font-semibold text-primary-700 border border-primary-200 rounded-lg py-2 hover:bg-primary-50 transition-colors">
+                <a href="/books/<?php echo htmlspecialchars($buku['slug']); ?>/" class="block text-center text-[10px] sm:text-xs font-semibold text-primary-700 border border-primary-200 rounded-lg py-2 hover:bg-primary-50 transition-colors">
                   Detail Buku
                 </a>
                 <a href="<?php echo htmlspecialchars($linkWA); ?>" target="_blank" rel="noopener"
-                   class="flex items-center justify-center gap-1.5 text-xs font-semibold text-white bg-green-600 rounded-lg py-2 hover:bg-green-700 transition-colors">
-                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2.25c-5.46 0-9.88 4.42-9.88 9.88 0 1.74.46 3.44 1.33 4.94L2 21.75l4.8-1.46a9.83 9.83 0 004.24.98h.01c5.46 0 9.88-4.42 9.88-9.88 0-5.46-4.42-9.88-9.89-9.88Zm5.7 14.02c-.24.68-1.4 1.3-1.93 1.34-.5.05-.99.24-3.32-.7-2.8-1.14-4.6-3.98-4.75-4.16-.14-.19-1.14-1.52-1.14-2.9 0-1.37.72-2.05.98-2.33.26-.28.56-.35.75-.35h.53c.17 0 .4-.06.62.48.24.58.8 2 .87 2.14.07.14.12.31.02.5-.1.19-.15.31-.3.48-.15.17-.31.38-.44.51-.15.15-.3.3-.13.6.17.3.77 1.27 1.65 2.06 1.14 1.02 2.09 1.34 2.39 1.49.3.15.47.13.65-.08.17-.2.74-.86.94-1.16.2-.3.4-.25.66-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.13.07.75-.17 1.43Z"/></svg>
-                  Pesan via WhatsApp
+                   class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-semibold text-white bg-green-600 rounded-lg py-2 px-2 hover:bg-green-700 transition-colors leading-tight">
+                  <svg class="w-4 h-4 sm:w-3.5 sm:h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2.25c-5.46 0-9.88 4.42-9.88 9.88 0 1.74.46 3.44 1.33 4.94L2 21.75l4.8-1.46a9.83 9.83 0 004.24.98h.01c5.46 0 9.88-4.42 9.88-9.88 0-5.46-4.42-9.88-9.89-9.88Zm5.7 14.02c-.24.68-1.4 1.3-1.93 1.34-.5.05-.99.24-3.32-.7-2.8-1.14-4.6-3.98-4.75-4.16-.14-.19-1.14-1.52-1.14-2.9 0-1.37.72-2.05.98-2.33.26-.28.56-.35.75-.35h.53c.17 0 .4-.06.62.48.24.58.8 2 .87 2.14.07.14.12.31.02.5-.1.19-.15.31-.3.48-.15.17-.31.38-.44.51-.15.15-.3.3-.13.6.17.3.77 1.27 1.65 2.06 1.14 1.02 2.09 1.34 2.39 1.49.3.15.47.13.65-.08.17-.2.74-.86.94-1.16.2-.3.4-.25.66-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.13.07.75-.17 1.43Z"/></svg>
+                  <span class="text-center">Pesan via WhatsApp</span>
                 </a>
               </div>
             </div>
@@ -306,5 +340,58 @@ function bukuQueryUrl(array $override = []) {
     </div>
   </section>
   </form>
+
+<script>
+// Toggle individual collapse dalam sidebar (kategori dan filter body)
+function toggleSidebar(bodyId, chevronId) {
+  const body = document.getElementById(bodyId);
+  const chevron = document.getElementById(chevronId);
+  
+  if (body.classList.contains('sidebar-collapsed')) {
+    body.classList.remove('sidebar-collapsed');
+    chevron.classList.add('rotate-180');
+  } else {
+    body.classList.add('sidebar-collapsed');
+    chevron.classList.remove('rotate-180');
+  }
+}
+
+// Toggle seluruh sidebar container (kategori + filter)
+function toggleFullSidebar() {
+  const container = document.getElementById('sidebar-container');
+  const toggleText = document.getElementById('toggle-text');
+  const filterIcon = document.getElementById('filter-icon');
+  
+  if (container.style.display === 'none') {
+    container.style.display = 'block';
+    toggleText.textContent = 'Sembunyikan Filter & Kategori';
+    filterIcon.classList.add('rotate-45');
+  } else {
+    container.style.display = 'none';
+    toggleText.textContent = 'Tampilkan Filter & Kategori';
+    filterIcon.classList.remove('rotate-45');
+  }
+}
+
+// CSS untuk animasi collapse
+const style = document.createElement('style');
+style.textContent = `
+  .sidebar-collapsible {
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+  
+  .sidebar-collapsed {
+    max-height: 0 !important;
+    transition: max-height 0.3s ease-in;
+  }
+  
+  #filter-icon {
+    transition: transform 0.3s ease;
+  }
+`;
+document.head.appendChild(style);
+</script>
 
 <?php include '../includes/footer.php'; ?>
