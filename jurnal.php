@@ -4,15 +4,30 @@ include 'includes/header.php';
 require_once 'includes/db.php';
 
 $pdo = getDB();
-$stmt = $pdo->query("SELECT title AS judul, description AS deskripsi, link AS url, image AS cover, issn, sinta, warna FROM journals WHERE is_active = 1 ORDER BY id ASC");
+
+// Pagination setup
+$perPage = 8; // 8 jurnal per halaman (2 baris x 4 kolom)
+$page = max(1, (int)($_GET['page'] ?? 1));
+$offset = ($page - 1) * $perPage;
+
+// Hitung total jurnal
+$stmtCount = $pdo->query("SELECT COUNT(*) FROM journals WHERE is_active = 1");
+$totalJurnal = (int) $stmtCount->fetchColumn();
+$totalPages = max(1, (int) ceil($totalJurnal / $perPage));
+$page = min($page, $totalPages);
+
+// Ambil data jurnal dengan pagination
+$stmt = $pdo->prepare("SELECT title AS judul, description AS deskripsi, link AS url, image AS cover, issn, sinta, warna FROM journals WHERE is_active = 1 ORDER BY id ASC LIMIT :limit OFFSET :offset");
+$stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
 $jurnalList = $stmt->fetchAll();
 
-$totalJurnal = count($jurnalList);
 $jumlahDitampilkan = count($jurnalList);
 ?>
 
   <!-- Hero -->
- <section class="relative overflow-hidden">
+ <section class="relative overflow-hidden" data-aos="fade-down" data-aos-duration="1000">
     <!-- Gambar latar -->
     <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/assets/img/laptop.png');"></div>
     <!-- Gradien overlay biar teks tetap kebaca -->
@@ -41,9 +56,9 @@ $jumlahDitampilkan = count($jurnalList);
   </section>
 
   <!-- Trust badges -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10" data-aos="fade-up" data-aos-duration="800">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
-      <div class="p-6 flex items-start gap-3">
+      <div class="p-6 flex items-start gap-3" data-aos="fade-up" data-aos-delay="100">
         <div class="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
           <svg class="w-6 h-6 text-primary-600" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"></path></svg>
         </div>
@@ -52,7 +67,7 @@ $jumlahDitampilkan = count($jurnalList);
           <p class="text-xs text-gray-500 mt-0.5">Jurnal kami terakreditasi dan terstandar nasional.</p>
         </div>
       </div>
-      <div class="p-6 flex items-start gap-3">
+      <div class="p-6 flex items-start gap-3" data-aos="fade-up" data-aos-delay="200">
         <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
           <svg class="w-6 h-6 text-emerald-600" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm-1 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"></path></svg>
         </div>
@@ -61,7 +76,7 @@ $jumlahDitampilkan = count($jurnalList);
           <p class="text-xs text-gray-500 mt-0.5">Akses jurnal kapan saja dan di mana saja.</p>
         </div>
       </div>
-      <div class="p-6 flex items-start gap-3">
+      <div class="p-6 flex items-start gap-3" data-aos="fade-up" data-aos-delay="300">
         <div class="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center shrink-0">
           <svg class="w-6 h-6 text-orange-600" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></svg>
         </div>
@@ -70,7 +85,7 @@ $jumlahDitampilkan = count($jurnalList);
           <p class="text-xs text-gray-500 mt-0.5">Terbuka untuk penulis, pembaca, dan reviewer.</p>
         </div>
       </div>
-      <div class="p-6 flex items-start gap-3">
+      <div class="p-6 flex items-start gap-3" data-aos="fade-up" data-aos-delay="400">
         <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
           <svg class="w-6 h-6 text-sky-600" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"></path></svg>
         </div>
@@ -83,10 +98,10 @@ $jumlahDitampilkan = count($jurnalList);
   </section>
 
   <!-- Daftar Jurnal -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" data-aos="fade-up" data-aos-duration="1000">
 
     <!-- Search -->
-    <div class="mb-8">
+    <div class="mb-8" data-aos="fade-up" data-aos-delay="100">
       <div class="relative max-w-xl">
         <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         <input type="text" id="search-jurnal" placeholder="Cari nama jurnal..."
@@ -100,24 +115,28 @@ $jumlahDitampilkan = count($jurnalList);
 
     <div class="flex items-end justify-between mb-6">
       <h2 class="text-xl font-bold text-gray-900">Daftar Jurnal</h2>
-      <p id="jurnal-counter" class="text-sm text-gray-500">Menampilkan <span id="count-tampil"><?php echo $totalJurnal; ?></span> dari <?php echo $totalJurnal; ?> jurnal</p>
+      <p id="jurnal-counter" class="text-sm text-gray-500">
+        Menampilkan <span id="count-tampil"><?php echo $offset + 1; ?>&ndash;<?php echo $offset + $jumlahDitampilkan; ?></span> dari <?php echo $totalJurnal; ?> jurnal
+      </p>
     </div>
 
     <div id="jurnal-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-      <?php foreach ($jurnalList as $j): ?>
-        <div class="jurnal-card rounded-xl border border-gray-100 overflow-hidden shadow-md hover:shadow-lg transition-all duration-200 flex flex-col"
-             data-judul="<?php echo strtolower(htmlspecialchars($j['judul'])); ?>">
+      <?php foreach ($jurnalList as $index => $j): ?>
+        <?php $delay = ($index % 4) * 100; // Staggered animation: 0, 100, 200, 300ms ?>
+        <div class="jurnal-card rounded-xl border border-gray-100 overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-2 hover:border-primary-300 transition-all duration-300 flex flex-col group"
+             data-judul="<?php echo strtolower(htmlspecialchars($j['judul'])); ?>"
+             data-aos="zoom-in" data-aos-delay="<?php echo $delay; ?>">
           <?php if (!empty($j['cover'])): ?>
             <div class="aspect-[3/4] w-full bg-gray-100 overflow-hidden">
-              <img src="<?php echo htmlspecialchars($j['cover']); ?>" alt="Cover <?php echo htmlspecialchars($j['judul']); ?>" class="w-full h-full object-cover">
+              <img src="<?php echo htmlspecialchars($j['cover']); ?>" alt="Cover <?php echo htmlspecialchars($j['judul']); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
             </div>
           <?php else: ?>
-            <div class="aspect-[3/4] <?php echo $j['warna']; ?> p-4 flex flex-col justify-center items-center text-center">
+            <div class="aspect-[3/4] <?php echo $j['warna']; ?> p-4 flex flex-col justify-center items-center text-center group-hover:brightness-110 transition-all duration-300">
               <span class="text-white text-xs font-bold uppercase tracking-wide leading-snug"><?php echo htmlspecialchars($j['judul']); ?></span>
             </div>
           <?php endif; ?>
           <div class="p-4 flex flex-col flex-1">
-            <p class="font-semibold text-gray-900 text-sm mb-1 leading-snug"><?php echo htmlspecialchars($j['judul']); ?></p>
+            <p class="font-semibold text-gray-900 text-sm mb-1 leading-snug group-hover:text-primary-600 transition-colors"><?php echo htmlspecialchars($j['judul']); ?></p>
             <p class="text-xs text-gray-400 mb-3">e-ISSN: <?php echo $j['issn']; ?></p>
             <a href="<?php echo htmlspecialchars($j['url']); ?>" target="_blank" class="mt-auto text-center text-sm font-semibold text-primary-700 border border-primary-200 rounded-lg py-2 hover:bg-primary-50 transition-colors">
               Lihat Jurnal
@@ -135,15 +154,71 @@ $jumlahDitampilkan = count($jurnalList);
       <button onclick="clearSearch()" class="mt-4 text-sm text-primary-600 hover:underline font-medium">Tampilkan semua jurnal</button>
     </div>
 
+    <!-- Pagination -->
+    <?php if ($totalPages > 1): ?>
+      <div id="jurnal-pagination" class="flex items-center justify-center gap-2 mt-12" data-aos="fade-up">
+        <!-- Previous Button -->
+        <a href="?page=<?php echo max(1, $page - 1); ?>"
+           class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 <?php echo $page <= 1 ? 'text-gray-300 pointer-events-none' : 'text-gray-500 hover:bg-gray-50'; ?>">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </a>
+
+        <!-- Page Numbers -->
+        <?php
+        // Logic untuk menampilkan halaman
+        $range = 2; // Jumlah halaman di kiri dan kanan halaman aktif
+        $start = max(1, $page - $range);
+        $end = min($totalPages, $page + $range);
+
+        // Halaman pertama
+        if ($start > 1): ?>
+          <a href="?page=1" class="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50">
+            1
+          </a>
+          <?php if ($start > 2): ?>
+            <span class="text-gray-400">...</span>
+          <?php endif;
+        endif;
+
+        // Halaman tengah
+        for ($i = $start; $i <= $end; $i++): ?>
+          <a href="?page=<?php echo $i; ?>"
+             class="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-semibold <?php echo $i === $page ? 'bg-primary-600 text-white' : 'border border-gray-200 text-gray-600 hover:bg-gray-50'; ?>">
+            <?php echo $i; ?>
+          </a>
+        <?php endfor;
+
+        // Halaman terakhir
+        if ($end < $totalPages): ?>
+          <?php if ($end < $totalPages - 1): ?>
+            <span class="text-gray-400">...</span>
+          <?php endif; ?>
+          <a href="?page=<?php echo $totalPages; ?>" class="w-9 h-9 flex items-center justify-center rounded-lg text-sm font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50">
+            <?php echo $totalPages; ?>
+          </a>
+        <?php endif; ?>
+
+        <!-- Next Button -->
+        <a href="?page=<?php echo min($totalPages, $page + 1); ?>"
+           class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 <?php echo $page >= $totalPages ? 'text-gray-300 pointer-events-none' : 'text-gray-500 hover:bg-gray-50'; ?>">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    <?php endif; ?>
+
   </section>
 
   <!-- Apa itu OJS? -->
-  <section id="tentang-ojs" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+  <section id="tentang-ojs" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16" data-aos="fade-up" data-aos-duration="1000">
     <div class="rounded-2xl bg-primary-50 p-8 lg:p-10 grid lg:grid-cols-3 gap-8 items-center">
       <div class="hidden lg:block">
       </div>
       <div class="lg:col-span-2 grid sm:grid-cols-2 gap-8">
-        <div>
+        <div data-aos="fade-right" data-aos-delay="200">
           <h3 class="text-lg font-bold text-gray-900 mb-2">Apa itu OJS?</h3>
           <p class="text-sm text-gray-600 leading-relaxed mb-4">
             OJS (Open Journal Systems) adalah sistem pengelolaan jurnal open source yang digunakan untuk menerbitkan dan mengelola jurnal ilmiah secara online.
@@ -152,7 +227,7 @@ $jumlahDitampilkan = count($jurnalList);
           Pelajari Selengkapnya
         </a>
         </div>
-        <div>
+        <div data-aos="fade-left" data-aos-delay="300">
           <h3 class="text-lg font-bold text-gray-900 mb-3">Untuk Pengguna</h3>
           <ul class="space-y-3 text-sm">
             <li>
@@ -173,11 +248,44 @@ $jumlahDitampilkan = count($jurnalList);
     </div>
   </section>
 
+<style>
+/* Custom hover effects untuk card jurnal */
+.jurnal-card {
+  transition: all 0.3s ease;
+}
+
+.jurnal-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border-color: #93c5fd;
+}
+
+.jurnal-card img {
+  transition: transform 0.5s ease;
+}
+
+.jurnal-card:hover img {
+  transform: scale(1.1);
+}
+
+.jurnal-card .font-semibold {
+  transition: color 0.3s ease;
+}
+
+.jurnal-card:hover .font-semibold {
+  color: #2563eb;
+}
+</style>
+
 <script>
+// Simpan nilai asli counter untuk restore nanti
+const originalCounter = document.getElementById('count-tampil').textContent;
+
 function filterJurnal() {
   const keyword  = document.getElementById('search-jurnal').value.toLowerCase().trim();
   const cards    = document.querySelectorAll('.jurnal-card');
   const btnClear = document.getElementById('btn-clear-search');
+  const pagination = document.getElementById('jurnal-pagination');
 
   btnClear.classList.toggle('hidden', keyword === '');
 
@@ -201,16 +309,33 @@ function filterJurnal() {
     }
   });
 
-  document.getElementById('count-tampil').textContent = visible;
+  // Update counter: jika sedang mencari, tampilkan jumlah hasil, jika tidak restore original
+  if (keyword !== '') {
+    document.getElementById('count-tampil').textContent = visible;
+  } else {
+    document.getElementById('count-tampil').textContent = originalCounter;
+  }
 
   const emptyEl = document.getElementById('jurnal-empty');
   const gridEl  = document.getElementById('jurnal-grid');
+  
   if (visible === 0) {
     gridEl.classList.add('hidden');
     emptyEl.classList.remove('hidden');
   } else {
     gridEl.classList.remove('hidden');
     emptyEl.classList.add('hidden');
+  }
+
+  // Sembunyikan pagination jika sedang mencari
+  if (pagination) {
+    if (keyword !== '') {
+      pagination.classList.add('hidden');
+    } else {
+      pagination.classList.remove('hidden');
+    }
+  }
+}
   }
 }
 

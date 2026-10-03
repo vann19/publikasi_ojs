@@ -96,8 +96,49 @@ function bukuQueryUrl(array $override = []) {
 }
 ?>
 
+<!-- ── CSS fallback: memaksa layout grid tetap benar walau Tailwind belum/ ──
+     tidak ter-generate untuk class-class unik di halaman ini. Tidak akan
+     mengubah apapun jika Tailwind sudah berjalan normal (nilainya sama). -->
+<style>
+  .nw-page-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:2rem;
+    width:100%;
+    max-width:80rem;
+    margin-inline:auto;
+  }
+  @media(min-width:1024px){
+    .nw-page-grid{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+  }
+  .nw-aside{ grid-column:span 1 / span 1; min-width:0; }
+  .nw-content{ grid-column:span 3 / span 3; min-width:0; }
+
+  .nw-book-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:1.25rem;
+    width:100%;
+  }
+  @media(min-width:640px){ .nw-book-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+  @media(min-width:1024px){ .nw-book-grid{ grid-template-columns:repeat(4,minmax(0,1fr)); } }
+
+  .nw-card-cover{
+    width:100%;
+    aspect-ratio:3/4;
+    background:#f3f4f6;
+    overflow:hidden;
+    display:block;
+  }
+  .nw-card-cover img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+</style>
+
   <!-- Hero Banner -->
-   <section class="relative overflow-hidden">
+   <section class="relative overflow-hidden" data-aos="fade-down" data-aos-duration="1000">
     <!-- Gambar latar -->
     <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/assets/img/buku.png');"></div>
     <!-- Gradien overlay biar teks tetap kebaca -->
@@ -125,10 +166,10 @@ function bukuQueryUrl(array $override = []) {
   <form method="GET" action="">
 
   <!-- Konten: sidebar + grid -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid lg:grid-cols-4 gap-8">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid lg:grid-cols-4 gap-8 nw-page-grid" data-aos="fade-up" data-aos-duration="1000">
 
     <!-- Sidebar -->
-    <aside class="lg:col-span-1 space-y-4">
+    <aside class="lg:col-span-1 space-y-4 nw-aside" data-aos="fade-right" data-aos-delay="200">
       
       <!-- Tombol Toggle Sidebar (Mobile & Desktop) -->
       <button type="button" id="toggle-sidebar-btn" onclick="toggleFullSidebar()"
@@ -225,7 +266,7 @@ function bukuQueryUrl(array $override = []) {
 
 
     <!-- Grid buku -->
-    <div class="lg:col-span-3">
+    <div class="lg:col-span-3 nw-content" data-aos="fade-left" data-aos-delay="200">
 
       <!-- Search + sort -->
       <div class="flex flex-col sm:flex-row gap-4 mb-6">
@@ -255,18 +296,20 @@ function bukuQueryUrl(array $override = []) {
       </p>
 
       <!-- Grid: items-stretch + h-full di tiap card biar tingginya seragam -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 items-stretch">
-        <?php foreach ($bukuList as $buku): ?>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 items-stretch nw-book-grid">
+        <?php foreach ($bukuList as $index => $buku): ?>
           <?php
             $hargaAngka = $buku['harga'];
             $hargaText  = $hargaAngka ? 'Rp' . number_format($hargaAngka, 0, ',', '.') : 'Hubungi kami';
             $pesanWA    = "Halo, saya ingin memesan buku \"{$buku['title']}\" ({$hargaText}).";
             $linkWA     = 'https://wa.me/' . $whatsappNomor . '?text=' . urlencode($pesanWA);
+            $delay      = ($index % 4) * 100; // Staggered animation: 0, 100, 200, 300ms
           ?>
-          <div class="h-full flex flex-col rounded-xl border border-gray-100 overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 bg-white group">
+          <div class="h-full flex flex-col rounded-xl border border-gray-100 overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 bg-white group"
+               data-aos="zoom-in" data-aos-delay="<?php echo $delay; ?>">
 
             <!-- Cover: tinggi tetap, konsisten di semua card -->
-            <a href="/books/<?php echo htmlspecialchars($buku['slug']); ?>/" class="block aspect-[3/4] bg-gray-100 overflow-hidden">
+            <a href="/books/<?php echo htmlspecialchars($buku['slug']); ?>/" class="block aspect-[3/4] bg-gray-100 overflow-hidden nw-card-cover">
               <?php if ($buku['image']): ?>
                 <img src="<?php echo htmlspecialchars($buku['image']); ?>" alt="<?php echo htmlspecialchars($buku['title']); ?>" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
               <?php else: ?>
@@ -298,13 +341,13 @@ function bukuQueryUrl(array $override = []) {
 
               <!-- spacer: dorong tombol ke bawah supaya semua card sejajar -->
               <div class="mt-auto pt-3 space-y-2">
-                <a href="/books/<?php echo htmlspecialchars($buku['slug']); ?>/" class="block text-center text-[10px] sm:text-xs font-semibold text-primary-700 border border-primary-200 rounded-lg py-2 hover:bg-primary-50 transition-colors">
+                <a href="/books/<?php echo htmlspecialchars($buku['slug']); ?>/" class="block text-center text-xs font-semibold text-primary-700 border border-primary-200 rounded-lg py-2 hover:bg-primary-50 transition-colors">
                   Detail Buku
                 </a>
                 <a href="<?php echo htmlspecialchars($linkWA); ?>" target="_blank" rel="noopener"
-                   class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-semibold text-white bg-green-600 rounded-lg py-2 px-2 hover:bg-green-700 transition-colors leading-tight">
-                  <svg class="w-4 h-4 sm:w-3.5 sm:h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2.25c-5.46 0-9.88 4.42-9.88 9.88 0 1.74.46 3.44 1.33 4.94L2 21.75l4.8-1.46a9.83 9.83 0 004.24.98h.01c5.46 0 9.88-4.42 9.88-9.88 0-5.46-4.42-9.88-9.89-9.88Zm5.7 14.02c-.24.68-1.4 1.3-1.93 1.34-.5.05-.99.24-3.32-.7-2.8-1.14-4.6-3.98-4.75-4.16-.14-.19-1.14-1.52-1.14-2.9 0-1.37.72-2.05.98-2.33.26-.28.56-.35.75-.35h.53c.17 0 .4-.06.62.48.24.58.8 2 .87 2.14.07.14.12.31.02.5-.1.19-.15.31-.3.48-.15.17-.31.38-.44.51-.15.15-.3.3-.13.6.17.3.77 1.27 1.65 2.06 1.14 1.02 2.09 1.34 2.39 1.49.3.15.47.13.65-.08.17-.2.74-.86.94-1.16.2-.3.4-.25.66-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.13.07.75-.17 1.43Z"/></svg>
-                  <span class="text-center">Pesan via WhatsApp</span>
+                   class="flex items-center justify-center gap-1.5 text-[10px] sm:text-xs font-semibold text-white bg-green-600 rounded-lg py-2 px-2 hover:bg-green-700 transition-colors">
+                  <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2.25c-5.46 0-9.88 4.42-9.88 9.88 0 1.74.46 3.44 1.33 4.94L2 21.75l4.8-1.46a9.83 9.83 0 004.24.98h.01c5.46 0 9.88-4.42 9.88-9.88 0-5.46-4.42-9.88-9.89-9.88Zm5.7 14.02c-.24.68-1.4 1.3-1.93 1.34-.5.05-.99.24-3.32-.7-2.8-1.14-4.6-3.98-4.75-4.16-.14-.19-1.14-1.52-1.14-2.9 0-1.37.72-2.05.98-2.33.26-.28.56-.35.75-.35h.53c.17 0 .4-.06.62.48.24.58.8 2 .87 2.14.07.14.12.31.02.5-.1.19-.15.31-.3.48-.15.17-.31.38-.44.51-.15.15-.3.3-.13.6.17.3.77 1.27 1.65 2.06 1.14 1.02 2.09 1.34 2.39 1.49.3.15.47.13.65-.08.17-.2.74-.86.94-1.16.2-.3.4-.25.66-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.07.13.07.75-.17 1.43Z"/></svg>
+                  <span class="whitespace-nowrap">Pesan via WhatsApp</span>
                 </a>
               </div>
             </div>
