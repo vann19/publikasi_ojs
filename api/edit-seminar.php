@@ -1,84 +1,60 @@
 <?php
 require_once '../includes/auth.php';
 require_once '../includes/db.php';
+require_once '../includes/seminar_helper.php';
 
-// Auth check
+header('Content-Type: application/json');
+
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
     exit;
 }
-
-header('Content-Type: application/json');
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['status' => 'error', 'message' => 'Method not allowed']);
     exit;
 }
 
-$id = $_POST['id'] ?? null;
-$title = trim($_POST['title'] ?? '');
-$description = trim($_POST['description'] ?? '');
-$date = trim($_POST['date'] ?? '');
-$location = trim($_POST['location'] ?? '');
-$link = trim($_POST['link'] ?? '');
-$price = isset($_POST['price']) && $_POST['price'] !== '' ? (int)$_POST['price'] : null;
-$is_active = isset($_POST['is_active']) ? 1 : 0;
-
-if (!$id || empty($title)) {
+$id = filter_var($_POST['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+$in = readSeminarInput();
+if ($id === false || $in['title'] === '') {
     echo json_encode(['status' => 'error', 'message' => 'ID dan Judul seminar wajib diisi']);
     exit;
 }
 
+$uploaded = [];
 try {
     $pdo = getDB();
-    
-    // Ambil data seminar yang lama
     $stmt = $pdo->prepare("SELECT image FROM seminars WHERE id = ?");
     $stmt->execute([$id]);
-    $oldSeminar = $stmt->fetch();
-    
-    if (!$oldSeminar) {
+    $old = $stmt->fetch();
+    if (!$old) {
         echo json_encode(['status' => 'error', 'message' => 'Seminar tidak ditemukan']);
         exit;
     }
-    
-    $imagePath = $oldSeminar['image'];
 
-    // Cek jika ada gambar baru diupload
-    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = '../storage/seminars/';
-        
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mimeType = finfo_file($finfo, $_FILES['image']['tmp_name']);
-        finfo_close($finfo);
+    $imagePath = uploadSeminarImage($old['image']);
+    if ($imagePath !== $old['image']) $uploaded[] = $imagePath;
 
-        if (strpos($mimeType, 'image/') !== 0) {
-            echo json_encode(['status' => 'error', 'message' => 'File harus berupa gambar.']);
-            exit;
-        }
+    $pdo->beginTransaction();
+    $sets = implode(', ', array_map(fn($c) => "$c = ?", SEMINAR_COLUMNS)) . ', image = ?';
+    $vals = [];
+    foreach (SEMINAR_COLUMNS as $c) $vals[] = $in[$c];
+    $vals[] = $imagePath;
+    $vals[] = $id;
+    $pdo->prepare("UPDATE seminars SET $sets WHERE id = ?")->execute($vals);
 
-        $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $newFileName = 'seminar_' . uniqid() . '.' . $extension;
-        $destination = $uploadDir . $newFileName;
+    $result = saveSeminarChildren($pdo, $id, $in);
+    $uploaded = array_merge($uploaded, $result['uploaded']);
+    $pdo->commit();
 
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
-            // Hapus gambar lama jika ada
-            if ($imagePath && file_exists('..' . $imagePath)) {
-                unlink('..' . $imagePath);
-            }
-            $imagePath = '/storage/seminars/' . $newFileName;
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Gagal mengupload gambar.']);
-            exit;
-        }
-    }
-
-    $updateStmt = $pdo->prepare("UPDATE seminars SET title=?, description=?, date=?, location=?, link=?, price=?, image=?, is_active=? WHERE id=?");
-    $updateStmt->execute([$title, $description, $date ?: null, $location, $link, $price, $imagePath, $is_active, $id]);
+    // Bersihkan file lama hanya setelah data baru tersimpan.
+    if ($imagePath !== $old['image']) removeLocalSeminarFile($old['image']);
 
     echo json_encode(['status' => 'success', 'message' => 'Seminar berhasil diperbarui']);
 } catch (Exception $e) {
+    if (isset($pdo) && $pdo->inTransaction()) $pdo->rollBack();
+    foreach ($uploaded as $p) removeLocalSeminarFile($p);
     echo json_encode(['status' => 'error', 'message' => 'Terjadi kesalahan sistem: ' . $e->getMessage()]);
 }

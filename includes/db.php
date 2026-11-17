@@ -2,7 +2,7 @@
 function getDB() {
     $envPath = __DIR__ . '/../.env';
     if (!file_exists($envPath)) {
-        die("File .env tidak ditemukan.");
+        throw new \RuntimeException("File .env tidak ditemukan di: $envPath");
     }
 
     $env = parse_ini_file($envPath);
@@ -18,6 +18,6 @@ function getDB() {
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         return $pdo;
     } catch (PDOException $e) {
-        die("Koneksi database gagal: " . $e->getMessage());
+        throw new \RuntimeException("Koneksi database gagal: " . $e->getMessage());
     }
 }

@@ -15,6 +15,18 @@ if (preg_match('#^/buku/(.*)$#', $path, $matches)) {
     exit;
 }
 
+// Redirect /index.php ke / (hilangkan duplikat beranda)
+if ($path === '/index.php') {
+    header("Location: /", true, 301);
+    exit;
+}
+
+// Rewrite /sitemap.xml ke /sitemap.php (konsolidasi sitemap)
+if ($path === '/sitemap.xml') {
+    require __DIR__ . '/sitemap.php';
+    return true;
+}
+
 // Rewrite books/slug to books/detail.php?slug=slug (dari .htaccess)
 if (preg_match('#^/books/([^/]+)/?$#', $path, $matches)) {
     // Set parameter GET slug

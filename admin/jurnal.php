@@ -182,10 +182,16 @@ $journals = $stmt->fetchAll();
                             <h2 class="text-lg font-bold text-gray-900">Daftar Jurnal</h2>
                             <p class="text-sm text-gray-500">Kelola daftar jurnal ilmiah yang ditampilkan di website.</p>
                         </div>
+                        <div class="flex flex-wrap gap-2">
+                        <button onclick="openJournalModal()" class="inline-flex items-center gap-2 bg-[#1E1B3A] hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                            Tambah Jurnal
+                        </button>
                         <button onclick="scrapeData()" id="btn-scrape" class="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                             Scrape Data OJS
                         </button>
+                        </div>
                     </div>
                     
                     <div class="overflow-x-auto">
@@ -196,16 +202,17 @@ $journals = $stmt->fetchAll();
                                     <th class="p-4 font-semibold">Jurnal</th>
                                     <th class="p-4 font-semibold">OJS Link</th>
                                     <th class="p-4 font-semibold text-center">Tampilkan di Web</th>
+                                    <th class="p-4 font-semibold text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
                                 <?php if(empty($journals)): ?>
                                 <tr>
-                                    <td colspan="4" class="p-8 text-center text-gray-500">Belum ada data jurnal. Silakan klik "Scrape Data OJS" untuk menarik data dari website OJS.</td>
+                                    <td colspan="5" class="p-8 text-center text-gray-500">Belum ada data jurnal. Silakan klik "Scrape Data OJS" untuk menarik data dari website OJS.</td>
                                 </tr>
                                 <?php else: ?>
                                     <?php foreach($journals as $j): ?>
-                                    <tr class="hover:bg-gray-50 transition-colors" id="row-jurnal-<?php echo $j['id']; ?>">
+                                    <tr class="hover:bg-gray-50 transition-colors" id="row-jurnal-<?php echo $j['id']; ?>" data-journal="<?php echo htmlspecialchars(json_encode($j), ENT_QUOTES); ?>">
                                         <td class="p-4 align-middle">
                                             <div class="cover-cell inline-block relative" style="width:64px;height:80px;">
                                                 <?php if(!empty($j['image'])): ?>
@@ -241,6 +248,16 @@ $journals = $stmt->fetchAll();
                                                 <label for="toggle-<?php echo $j['id']; ?>" class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer transition-colors duration-300"></label>
                                             </div>
                                         </td>
+                                        <td class="p-4 align-middle text-center">
+                                            <div class="inline-flex items-center gap-3">
+                                                <button type="button" onclick="openJournalModal(<?php echo $j['id']; ?>)" class="text-primary-600 hover:text-primary-800 transition-colors" title="Edit">
+                                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                                </button>
+                                                <button type="button" onclick="deleteJournal(<?php echo $j['id']; ?>)" class="text-red-500 hover:text-red-700 transition-colors" title="Hapus">
+                                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                </button>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
@@ -250,6 +267,80 @@ $journals = $stmt->fetchAll();
                 </div>
             </div>
         </main>
+    </div>
+</div>
+
+<!-- Form Tambah/Edit Jurnal -->
+<div class="cover-modal-overlay" id="journal-modal-overlay" onclick="closeJournalModal(event)">
+    <div class="cover-modal" style="max-width:640px;max-height:90vh;overflow-y:auto" onclick="event.stopPropagation()">
+        <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-lg font-bold text-gray-900" id="journal-modal-title">Tambah Jurnal</h3>
+            <button type="button" onclick="closeJournalModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+        <form id="journal-form" class="p-6 space-y-4 text-sm">
+            <input type="hidden" name="id" id="journal-id">
+            <div>
+                <label class="block font-medium text-gray-700 mb-1">Judul Jurnal <span class="text-red-500">*</span></label>
+                <input type="text" name="title" id="journal-title" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none">
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Path OJS</label>
+                    <input type="text" name="path" id="journal-path" placeholder="contoh: al-khazin" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none">
+                    <p class="mt-1 text-xs text-gray-400">Dipakai sebagai kunci saat scraping. Harus unik.</p>
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Link OJS</label>
+                    <input type="url" name="link" id="journal-link" placeholder="https://..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">ISSN</label>
+                    <input type="text" name="issn" id="journal-issn" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none">
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Akreditasi</label>
+                    <input type="text" name="sinta" id="journal-sinta" placeholder="SINTA" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none">
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Warna Kartu</label>
+                    <input type="text" name="warna" id="journal-warna" placeholder="bg-teal-700" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Volume</label>
+                    <input type="text" name="volume" id="journal-volume" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none">
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Issue</label>
+                    <input type="text" name="issue" id="journal-issue" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none">
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Tanggal Terbit</label>
+                    <input type="date" name="published_date" id="journal-published_date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none">
+                </div>
+            </div>
+            <div>
+                <label class="block font-medium text-gray-700 mb-1">Deskripsi</label>
+                <textarea name="description" id="journal-description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none resize-none"></textarea>
+            </div>
+            <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer">
+                <span>
+                    <span class="block font-medium text-gray-700">Tampilkan di Web</span>
+                    <span class="block text-xs text-gray-400">Jurnal muncul di halaman jurnal publik.</span>
+                </span>
+                <input type="checkbox" name="is_active" id="journal-is_active" value="1" checked class="w-5 h-5 accent-primary-600">
+            </label>
+            <div id="journal-form-alert" class="hidden p-3 rounded-lg text-sm"></div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="closeJournalModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">Batal</button>
+                <button type="submit" id="btn-save-journal" class="px-5 py-2 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">Simpan</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -477,6 +568,89 @@ async function uploadCover() {
     } finally {
         btn.disabled = false;
         btn.innerHTML = `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg> Upload & Konversi WebP`;
+    }
+}
+
+// ===== CRUD Jurnal =====
+const journalFields = ['title', 'path', 'link', 'issn', 'sinta', 'warna', 'volume', 'issue', 'published_date', 'description'];
+
+function openJournalModal(id) {
+    const form = document.getElementById('journal-form');
+    form.reset();
+    hideJournalFormAlert();
+    document.getElementById('journal-id').value = '';
+    document.getElementById('journal-is_active').checked = true;
+    document.getElementById('journal-modal-title').textContent = 'Tambah Jurnal';
+
+    if (id) {
+        const row = document.getElementById('row-jurnal-' + id);
+        const data = JSON.parse(row.dataset.journal);
+        document.getElementById('journal-id').value = data.id;
+        journalFields.forEach(f => {
+            document.getElementById('journal-' + f).value = data[f] ?? '';
+        });
+        document.getElementById('journal-is_active').checked = !!parseInt(data.is_active, 10);
+        document.getElementById('journal-modal-title').textContent = 'Edit Jurnal';
+    }
+    document.getElementById('journal-modal-overlay').classList.add('active');
+}
+
+function closeJournalModal(event) {
+    if (event && event.target !== document.getElementById('journal-modal-overlay')) return;
+    document.getElementById('journal-modal-overlay').classList.remove('active');
+}
+
+function hideJournalFormAlert() {
+    const box = document.getElementById('journal-form-alert');
+    box.className = 'hidden p-3 rounded-lg text-sm';
+    box.textContent = '';
+}
+
+function showJournalFormAlert(type, message) {
+    const box = document.getElementById('journal-form-alert');
+    box.className = 'p-3 rounded-lg text-sm ' + (type === 'success'
+        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+        : 'bg-red-50 text-red-800 border border-red-200');
+    box.textContent = message;
+}
+
+document.getElementById('journal-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btn-save-journal');
+    const label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Menyimpan...';
+    try {
+        const body = new FormData(e.target);
+        if (!document.getElementById('journal-is_active').checked) body.delete('is_active');
+        const res = await fetch('/api/save-jurnal.php', { method: 'POST', body });
+        const data = await res.json();
+        showJournalFormAlert(data.status, data.message);
+        if (data.status === 'success') {
+            setTimeout(() => location.reload(), 800);
+        }
+    } catch {
+        showJournalFormAlert('error', 'Terjadi kesalahan jaringan.');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = label;
+    }
+});
+
+async function deleteJournal(id) {
+    if (!confirm('Hapus jurnal ini? Cover yang tersimpan juga akan dihapus.')) return;
+    const body = new FormData();
+    body.append('id', id);
+    try {
+        const res = await fetch('/api/delete-jurnal.php', { method: 'POST', body });
+        const data = await res.json();
+        if (data.status === 'success') {
+            location.reload();
+        } else {
+            alert(data.message);
+        }
+    } catch {
+        alert('Terjadi kesalahan jaringan.');
     }
 }
 

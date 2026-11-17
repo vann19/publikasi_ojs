@@ -1,5 +1,8 @@
 <?php
 $activePage = 'beranda';
+$seoTitle = 'Nawa Edukasi | Penerbitan Buku, Jurnal Ilmiah & Layanan HKI Terpercaya';
+$seoDesc  = 'PT Nawa Edukasi Nusantara - solusi lengkap penerbitan buku ber-ISBN, publikasi jurnal ilmiah terindeks SINTA, pengurusan HKI, dan penyelenggaraan seminar ilmiah.';
+$seoUrl   = 'https://nawaedukasi.org/';
 include 'includes/header.php';
 require_once 'includes/db.php';
 $pdo = getDB();

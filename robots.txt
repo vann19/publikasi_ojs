@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nawaedukasi.org/sitemap.php
+# Blokir halaman admin dan API dari indexing
+Disallow: /admin/
+Disallow: /api/
+Disallow: /login-secure-xyz.php
+
+Sitemap: https://nawaedukasi.org/sitemap.xml

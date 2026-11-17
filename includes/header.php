@@ -33,6 +33,9 @@ $seoUrl   = $seoUrl ?? 'https://nawaedukasi.org' . $_SERVER['REQUEST_URI'];
   <meta property="twitter:description" content="<?php echo htmlspecialchars($seoDesc); ?>">
   <meta property="twitter:image" content="<?php echo htmlspecialchars($seoImage); ?>">
 
+  <!-- Canonical URL — mencegah duplikat konten dari variasi domain/protokol -->
+  <link rel="canonical" href="<?php echo htmlspecialchars($seoUrl); ?>">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/output.css">

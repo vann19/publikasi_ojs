@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Halaman Utama -->
+  <url>
+    <loc>https://nawaedukasi.org/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Tentang Kami -->
+  <url>
+    <loc>https://nawaedukasi.org/tentang-kami.php</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Katalog Buku -->
+  <url>
+    <loc>https://nawaedukasi.org/books/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Jurnal -->
+  <url>
+    <loc>https://nawaedukasi.org/jurnal.php</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Seminar -->
+  <url>
+    <loc>https://nawaedukasi.org/seminar.php</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Layanan -->
+  <url>
+    <loc>https://nawaedukasi.org/layanan.php</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Kontak -->
+  <url>
+    <loc>https://nawaedukasi.org/kontak.php</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>

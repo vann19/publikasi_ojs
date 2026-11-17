@@ -1,5 +1,8 @@
 <?php
 $activePage = 'jurnal';
+$seoTitle = 'Jurnal Ilmiah (OJS) | Nawa Edukasi - Publikasi Jurnal Terpercaya';
+$seoDesc  = 'Temukan dan akses jurnal ilmiah terindeks yang diterbitkan oleh PT Nawa Edukasi Nusantara. Publikasi akademik berkualitas tinggi untuk peneliti Indonesia.';
+$seoUrl   = 'https://nawaedukasi.org/jurnal.php';
 include 'includes/header.php';
 require_once 'includes/db.php';
 

@@ -1,5 +1,8 @@
 <?php
 $activePage = 'tentang-kami';
+$seoTitle = 'Tentang Kami | PT Nawa Edukasi Nusantara - Mitra Publikasi Ilmiah';
+$seoDesc  = 'PT Nawa Edukasi Nusantara adalah perusahaan penerbitan dan publikasi ilmiah terpercaya di Indonesia. Mengelola jurnal OJS, penerbitan buku, HKI, dan penyelenggaraan seminar.';
+$seoUrl   = 'https://nawaedukasi.org/tentang-kami.php';
 include 'includes/header.php';
 ?>
 

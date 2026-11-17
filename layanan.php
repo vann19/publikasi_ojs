@@ -1,5 +1,8 @@
 <?php
 $activePage = 'layanan';
+$seoTitle = 'Layanan Penerbitan & HKI | Nawa Edukasi';
+$seoDesc  = 'Layanan lengkap dari PT Nawa Edukasi Nusantara: penerbitan buku ber-ISBN, pengurusan HKI/hak cipta, publikasi jurnal ilmiah SINTA, dan pendampingan akademik.';
+$seoUrl   = 'https://nawaedukasi.org/layanan.php';
 include 'includes/header.php';
 
 $whatsappNomor = '6281916200962';

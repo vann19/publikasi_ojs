@@ -1,5 +1,8 @@
 <?php
 $activePage = 'kontak';
+$seoTitle = 'Kontak Kami | Nawa Edukasi - Hubungi Tim Publikasi Kami';
+$seoDesc  = 'Hubungi PT Nawa Edukasi Nusantara untuk layanan penerbitan buku, jurnal ilmiah, HKI, dan seminar. Kami siap membantu kebutuhan akademik dan publikasi Anda.';
+$seoUrl   = 'https://nawaedukasi.org/kontak.php';
 include 'includes/header.php';
 ?>
 

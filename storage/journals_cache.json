@@ -11,8 +11,8 @@
     },
     {
         "path": "jimulti",
-        "judul": "Jurnal Ilmu Pendidikan",
-        "deskripsi": "Jurnal ilmiah Jurnal Ilmu Pendidikan dari Nawa Edukasi.",
+        "judul": "Jurnal Ilmu Pendidikan: Jimulti",
+        "deskripsi": "Jurnal ilmiah Jurnal Ilmu Pendidikan: Jimulti dari Nawa Edukasi.",
         "issn": "ISSN",
         "sinta": "SINTA",
         "warna": "bg-sky-800",
@@ -61,13 +61,13 @@
     },
     {
         "path": "jpkm",
-        "judul": "SEHATI: Jurnal Pengabdian Kepada Masyarakat",
-        "deskripsi": "Jurnal ilmiah SEHATI: Jurnal Pengabdian Kepada Masyarakat dari Nawa Edukasi.",
+        "judul": "EMPOWEREDU: Jurnal Edukasi dan Pemberdayaan Masyarakat",
+        "deskripsi": "Jurnal ilmiah EMPOWEREDU: Jurnal Edukasi dan Pemberdayaan Masyarakat dari Nawa Edukasi.",
         "issn": "ISSN",
         "sinta": "SINTA",
         "warna": "bg-rose-800",
         "url": "https:\/\/e-journal.nawaedukasi.org\/index.php\/jpkm",
-        "cover": "https:\/\/e-journal.nawaedukasi.org\/public\/journals\/4\/pageHeaderLogoImage_en.jpg"
+        "cover": "https:\/\/e-journal.nawaedukasi.org\/public\/journals\/4\/pageHeaderLogoImage_en.png"
     },
     {
         "path": "al-hikmah",
@@ -78,5 +78,15 @@
         "warna": "bg-slate-700",
         "url": "https:\/\/e-journal.nawaedukasi.org\/index.php\/al-hikmah",
         "cover": "https:\/\/e-journal.nawaedukasi.org\/public\/journals\/9\/pageHeaderLogoImage_en.jpg"
+    },
+    {
+        "path": "maqasid",
+        "judul": "Maqasid: Jurnal Hukum Ekonomi Syariah",
+        "deskripsi": "Jurnal ilmiah Maqasid: Jurnal Hukum Ekonomi Syariah dari Nawa Edukasi.",
+        "issn": "ISSN",
+        "sinta": "SINTA",
+        "warna": "bg-emerald-700",
+        "url": "https:\/\/e-journal.nawaedukasi.org\/index.php\/maqasid",
+        "cover": "https:\/\/e-journal.nawaedukasi.org\/public\/journals\/12\/pageHeaderLogoImage_en.jpg"
     }
 ]

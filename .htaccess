@@ -1,6 +1,21 @@
 RewriteEngine On
 Options -MultiViews
 
+# ── Force HTTPS (redirect http → https) ──
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# ── Force non-www (redirect www.nawaedukasi.org → nawaedukasi.org) ──
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+# ── Redirect /index.php ke / (menghilangkan duplikat beranda) ──
+RewriteCond %{THE_REQUEST} \s/index\.php[\s?] [NC]
+RewriteRule ^index\.php$ / [R=301,L]
+
+# ── Sitemap: redirect /sitemap.xml ke /sitemap.php ──
+RewriteRule ^sitemap\.xml$ /sitemap.php [L]
+
 # Redirect /buku to /books
 RewriteRule ^buku/(.*)$ books/$1 [R=301,L]
 

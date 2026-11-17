@@ -1,5 +1,8 @@
 <?php
 $activePage = 'buku';
+$seoTitle = 'Katalog Buku | Nawa Edukasi - Koleksi Buku Ilmiah Ber-ISBN';
+$seoDesc  = 'Temukan koleksi buku ilmiah dan akademik ber-ISBN yang diterbitkan oleh PT Nawa Edukasi Nusantara. Buku referensi untuk peneliti, dosen, dan mahasiswa Indonesia.';
+$seoUrl   = 'https://nawaedukasi.org/books/';
 include '../includes/header.php';
 
 require_once '../includes/db.php';
